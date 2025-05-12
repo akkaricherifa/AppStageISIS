@@ -4,18 +4,20 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Tableau de Bord École</title>
-    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet">
+    <title>Tableau de Bord - Administration École</title>
     <style>
         :root {
-            --primary-color: #9d7a8c; /* mauve doux */
-            --secondary-color: #d4b9a4; /* nude */
-            --tertiary-color: #a88c7d; /* ton terre */
-            --light-color: #f7f3f1; /* très clair pour le fond */
-            --dark-color: #484041; /* sombre pour le texte */
-            --shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
-            --radius: 10px;
+            --color-primary: #b08f8a; /* Nude/Mauve clair */
+            --color-secondary: #9c7c8a; /* Mauve moyen */
+            --color-accent: #a68069; /* Ton terre */
+            --color-background: #f8f5f3; /* Fond très clair */
+            --color-sidebar: #f0e9e7; /* Sidebar légèrement plus foncée */
+            --color-text: #4a4a4a; /* Texte gris foncé */
+            --color-text-light: #8a8a8a; /* Texte gris clair */
+            --shadow: 0 4px 12px rgba(0, 0, 0, 0.05);
+            --border-radius: 12px;
             --transition: all 0.3s ease;
+            --light-mauve: #b9a7c4;
         }
 
         * {
@@ -26,78 +28,35 @@
         }
 
         body {
-            background-color: var(--light-color);
-            color: var(--dark-color);
-            display: flex;
+            background-color: var(--color-background);
+            color: var(--color-text);
             min-height: 100vh;
-        }
-
-        /* Sidebar */
-        .sidebar {
-            width: 250px;
-            background-color: white;
-            box-shadow: var(--shadow);
-            padding: 20px 0;
             display: flex;
             flex-direction: column;
-            z-index: 10;
         }
 
-        .sidebar-link {
-            padding: 12px 20px;
-            display: flex;
-            align-items: center;
-            color: var(--dark-color);
-            text-decoration: none;
-            transition: var(--transition);
-            margin: 2px 10px;
-            border-radius: var(--radius);
-        }
-
-        .sidebar-link:hover {
-            background-color: var(--primary-color);
-            color: white;
-        }
-
-        .sidebar-link i {
-            margin-right: 10px;
-            width: 20px;
-            text-align: center;
-        }
-
-        .sidebar-link.active {
-            background-color: var(--primary-color);
-            color: white;
-        }
-
-        /* Main Content */
-        .main-content {
-            flex: 1;
-            display: flex;
-            flex-direction: column;
-            overflow-x: hidden;
-        }
-
-        /* Navbar */
+        /* Navbar Styles */
         .navbar {
             background-color: white;
-            padding: 15px 20px;
+            box-shadow: var(--shadow);
+            height: 70px;
             display: flex;
             align-items: center;
             justify-content: space-between;
-            box-shadow: var(--shadow);
-            position: sticky;
+            padding: 0 2rem;
+            position: fixed;
             top: 0;
-            z-index: 5;
+            width: 100%;
+            z-index: 100;
         }
 
-        .brand {
+       .brand {
          display: flex;
          align-items: center;
          }
 
         .brand img {
-         width: 60px;
+         width: 120px;
         height: auto;
         transition: var(--transition);
         margin-right: 15px;
@@ -107,296 +66,375 @@
          transform: scale(1.05);  /* Légère augmentation au survol */
         }
 
-         .school-name {
-        font-size: 1.2rem;
-        font-weight: 600;
-         color: var(--primary-color);
-        }
+
 
         .school-name {
-            font-size: 1.2rem;
+            font-size: 1.25rem;
             font-weight: 600;
-            color: var(--primary-color);
+            color: var(--color-text);
         }
 
-        .user-menu {
+        .navbar-user {
             display: flex;
             align-items: center;
+            gap: 1rem;
         }
 
-        .welcome-message {
-            margin-right: 15px;
+        .welcome-text {
+            font-size: 0.9rem;
+            color: var(--color-text-light);
+        }
+
+        .admin-name {
+            font-weight: 600;
+            color: var(--color-text);
         }
 
         .logout-btn {
-            background-color: transparent;
-            border: 1px solid var(--tertiary-color);
-            border-radius: var(--radius);
-            padding: 8px 12px;
-            color: var(--tertiary-color);
-            cursor: pointer;
-            transition: var(--transition);
+        background-color: var(--primary-color); /* #9d7a8c - votre mauve */
+        border: 2px solid var(--primary-color); /* Bordure harmonieuse */
+        color: var(--light-color); /* #9d7a8c - votre couleur claire */
+        cursor: pointer;
+        display: flex;
+        align-items: center;
+        gap: 0.5rem;
+        padding: 0.5rem 1rem;
+        border-radius: var(--radius); /* 10px */
+        transition: var(--transition);
+        box-shadow: var(--shadow);
+        font-weight: 500;
+        }
+
+         .logout-btn:hover {
+        background-color: var(--tertiary-color); /*rgb(170, 140, 189); - ton terre */
+        border-color: var(--tertiary-color);
+        color:rgb(182, 119, 151);
+        transform: translateY(-2px);
+        }
+
+         .logout-btn:active {
+        background-color: var(--secondary-color); /* #d4b9a4 - nude */
+        border-color: var(--secondary-color);
+        transform: translateY(0);
+         }
+
+        /* Version Dark Mode */
+        .dark-mode .logout-btn {
+        background-color: var(--light-mauve); /* #4b3f56 */
+         border-color: var(--light-mauve);
+         color: var(--dark-text); /* #e0e0e0 */
+         }
+
+          .dark-mode .logout-btn:hover {
+        background-color: var(--light-earth); /* #5c4a3a */
+         border-color: var(--light-earth);
+        }
+    
+
+        /* Sidebar Styles */
+        .container {
+            display: flex;
+            margin-top: 70px;
+            min-height: calc(100vh - 70px);
+        }
+
+        .sidebar {
+            width: 250px;
+            background-color: var(--color-sidebar);
+            height: calc(100vh - 70px);
+            position: fixed;
+            padding: 2rem 1rem;
+            display: flex;
+            flex-direction: column;
+            gap: 0.5rem;
+        }
+
+        .nav-item {
             display: flex;
             align-items: center;
+            gap: 1rem;
+            padding: 0.75rem 1rem;
+            border-radius: 8px;
+            cursor: pointer;
+            transition: var(--transition);
+            color: var(--color-text);
+            text-decoration: none;
         }
 
-        .logout-btn:hover {
-            background-color: var(--tertiary-color);
-            color: white;
+        .nav-item:hover, .nav-item.active {
+            background-color: white;
+            color: var(--color-secondary);
         }
 
-        .logout-btn i {
-            margin-left: 5px;
+        .nav-item.active {
+            border-left: 4px solid var(--color-secondary);
         }
 
-        /* Dashboard Content */
-        .dashboard {
-            padding: 20px;
+        .nav-icon {
+            font-size: 1.2rem;
+            width: 24px;
+            text-align: center;
+        }
+
+        /* Main Content Styles */
+        .main-content {
             flex: 1;
+            margin-left: 250px;
+            padding: 2rem;
         }
 
         .dashboard-title {
-            margin-bottom: 20px;
-            color: var(--primary-color);
+            font-size: 1.75rem;
+            font-weight: 600;
+            margin-bottom: 1.5rem;
+            color: var(--color-text);
         }
 
         .cards-container {
             display: grid;
-            grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
-            gap: 20px;
+            grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+            gap: 1.5rem;
         }
 
         .card {
             background-color: white;
-            border-radius: var(--radius);
+            border-radius: var(--border-radius);
             box-shadow: var(--shadow);
-            padding: 20px;
+            padding: 1.5rem;
             transition: var(--transition);
+            min-height: 160px;
             display: flex;
             flex-direction: column;
-            align-items: center;
-            text-align: center;
+            justify-content: space-between;
+            position: relative;
+            overflow: hidden;
+            transition: transform 0.3s ease, box-shadow 0.9s ease;
         }
 
         .card:hover {
             transform: translateY(-5px);
-            box-shadow: 0 6px 12px rgba(0, 0, 0, 0.1);
+            box-shadow: 0 10px 20px rgba(0, 0, 0, 0.08);
         }
 
-        .card-icon {
-            width: 60px;
-            height: 60px;
-            border-radius: 50%;
-            background-color: var(--light-color);
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            margin-bottom: 15px;
-        }
-
-        .card-icon i {
-            font-size: 1.5rem;
-            color: var(--primary-color);
+        .card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 4px;
+            background: linear-gradient(to right, var(--color-primary), var(--color-secondary));
         }
 
         .card-title {
             font-size: 1.1rem;
-            margin-bottom: 10px;
-            color: var(--tertiary-color);
             font-weight: 600;
+            margin-bottom: 0.5rem;
+            color: var(--color-text);
         }
 
         .card-value {
-            font-size: 1.8rem;
+            font-size: 2rem;
             font-weight: 700;
-            color: var(--dark-color);
+            color: var(--color-accent);
+            margin-bottom: 0.5rem;
         }
 
-        .card-description {
-            margin-top: 10px;
-            color: #777;
+        .card-desc {
             font-size: 0.9rem;
+            color: var(--color-text-light);
         }
 
-        /* Responsive */
-        @media (max-width: 768px) {
-            body {
-                flex-direction: column;
-            }
-            
+        .card-icon {
+            position: absolute;
+            bottom: 1rem;
+            right: 1rem;
+            color: rgba(0, 0, 0, 0.05);
+            font-size: 3rem;
+        }
+
+        @media (max-width: 1024px) {
             .sidebar {
-                width: 100%;
-                padding: 10px 0;
+                width: 80px;
             }
             
-            .cards-container {
-                grid-template-columns: 1fr;
+            .nav-text {
+                display: none;
+            }
+            
+            .main-content {
+                margin-left: 80px;
             }
         }
+
+        @media (max-width: 768px) {
+            .cards-container {
+                grid-template-columns: repeat(auto-fill, minmax(220px, 1fr));
+            }
+        }
+            .card-link {
+              text-decoration: none;
+              color: inherit;
+             }
+
+            .card-link:hover .card {
+              transform: translateY(-15px);
+              box-shadow: 0 6px 12px rgba(0, 0, 0, 0.15);
+            }
     </style>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
 </head>
 <body>
-    <!-- Sidebar -->
-    <div class="sidebar">
-        <a href="#" class="sidebar-link active">
-            <i class="fas fa-tachometer-alt"></i>
-            Tableau de bord
-        </a>
-        <a href="#" class="sidebar-link">
-            <i class="fas fa-user-graduate"></i>
-            Élèves
-        </a>
-        <a href="#" class="sidebar-link">
-            <i class="fas fa-chalkboard-teacher"></i>
-            Enseignants
-        </a>
-        <a href="#" class="sidebar-link">
-            <i class="fas fa-book"></i>
-            Cours
-        </a>
-        <a href="#" class="sidebar-link">
-            <i class="fas fa-calendar-alt"></i>
-            Calendrier
-        </a>
-        <a href="#" class="sidebar-link">
-            <i class="fas fa-chart-bar"></i>
-            Statistiques
-        </a>
-        <a href="#" class="sidebar-link">
-            <i class="fas fa-cog"></i>
-            Paramètres
-        </a>
-    </div>
-
-    <!-- Main Content -->
-    <div class="main-content">
-        <!-- Navbar -->
-        <div class="navbar">
-            <div class="brand">
+    <!-- Navbar -->
+    <nav class="navbar">
+        <div class="brand">
                  <img src="{% static 'images/isis.png' %}" alt="Logo Institut" class="logo-img" />
                 <div class="school-name">École d'ingénieurs ISIS - Informatique et Systèmes d'Information pour la Santé</div>
             </div>
-            <div class="user-menu">
-                <div class="welcome-message">Bienvenue, Admin</div>
-                <button class="logout-btn">
-                    Déconnexion <i class="fas fa-sign-out-alt"></i>
-                </button>
+        <div class="navbar-user">
+            <div>
+                <span class="welcome-text">Bienvenue,</span>
+                <span class="admin-name">Admin</span>
             </div>
+            <button class="logout-btn">
+                <i class="fas fa-sign-out-alt"></i>
+                <span>Déconnexion</span>
+            </button>
         </div>
+    </nav>
 
-        <!-- Dashboard Content -->
-        <div class="dashboard">
-            <h2 class="dashboard-title">Tableau de bord administratif</h2>
+    <!-- Container for sidebar and main content -->
+    <div class="container">
+        <!-- Sidebar -->
+        <aside class="sidebar">
+            <a href="#" class="nav-item active">
+                <i class="fas fa-home nav-icon"></i>
+                <span class="nav-text">Tableau de bord</span>
+            </a>
+            <a href="#" class="nav-item">
+                <i class="fas fa-user-graduate nav-icon"></i>
+                <span class="nav-text">Étudiants</span>
+            </a>
+            <a href="#" class="nav-item">
+                <i class="fas fa-chalkboard-teacher nav-icon"></i>
+                <span class="nav-text">Enseignants</span>
+            </a>
+            <a href="#" class="nav-item">
+                <i class="fas fa-book nav-icon"></i>
+                <span class="nav-text">Cours</span>
+            </a>
+            <a href="#" class="nav-item">
+                <i class="fas fa-calendar-alt nav-icon"></i>
+                <span class="nav-text">Calendrier</span>
+            </a>
+            <a href="#" class="nav-item">
+                <i class="fas fa-file-alt nav-icon"></i>
+                <span class="nav-text">Rapports</span>
+            </a>
+            <a href="#" class="nav-item">
+                <i class="fas fa-cog nav-icon"></i>
+                <span class="nav-text">Paramètres</span>
+            </a>
+        </aside>
+
+        <!-- Main Content -->
+        <main class="main-content">
+           
+            <h1 class="dashboard-title">Tableau de bord</h1>
             
             <div class="cards-container">
-                <!-- Card 1 -->
+                 <a href="{% url 'home2' %}" class="card-link">
+               
                 <div class="card">
-                    <div class="card-icon">
-                        <i class="fas fa-user-graduate"></i>
+                    <div>
+                        <h3 class="card-title">Effectifs étudiants</h3>
+                        <p class="card-desc">Description de la Catégorie 1</p>
                     </div>
-                    <h3 class="card-title">Effectif total</h3>
-                    <div class="card-value">523</div>
-                    <p class="card-description">Nombre total d'élèves inscrits</p>
+                     <i class="fas fa-users card-icon"></i>
                 </div>
-                
+           
                 <!-- Card 2 -->
+                      <a href="{% url 'home2' %}" class="card-link">
                 <div class="card">
-                    <div class="card-icon">
-                        <i class="fas fa-chalkboard-teacher"></i>
+                    <div>
+                        <h3 class="card-title">Enseignement et pédagogie</h3>
+                        <p class="card-desc">Description de la Catégorie 2</p>
                     </div>
-                    <h3 class="card-title">Personnel enseignant</h3>
-                    <div class="card-value">42</div>
-                    <p class="card-description">Nombre total d'enseignants</p>
+                    <i class="fas fa-book-open card-icon"></i>
                 </div>
                 
                 <!-- Card 3 -->
+                 <a href="{% url 'home2' %}" class="card-link">
                 <div class="card">
-                    <div class="card-icon">
-                        <i class="fas fa-book"></i>
+                    <div>
+                        <h3 class="card-title">Recherche académique</h3>
+                        <p class="card-desc">Description de la Catégorie 3</p>
                     </div>
-                    <h3 class="card-title">Cours actifs</h3>
-                    <div class="card-value">24</div>
-                    <p class="card-description">Cours dispensés ce semestre</p>
+                    <i class="fas fa-graduation-cap card-icon"></i>
                 </div>
                 
                 <!-- Card 4 -->
+                      <a href="{% url 'home2' %}" class="card-link">
                 <div class="card">
-                    <div class="card-icon">
-                        <i class="fas fa-percent"></i>
+                    <div>
+                        <h3 class="card-title">Partenariats et International</h3>
+                        <p class="card-desc">Description de la Catégorie 4</p>
                     </div>
-                    <h3 class="card-title">Taux de réussite</h3>
-                    <div class="card-value">92%</div>
-                    <p class="card-description">Pourcentage de réussite aux examens</p>
+                    <i class="fas fa-globe card-icon"></i>
+
                 </div>
                 
                 <!-- Card 5 -->
+                      <a href="{% url 'home2' %}" class="card-link">
                 <div class="card">
-                    <div class="card-icon">
-                        <i class="fas fa-calendar-check"></i>
+                    <div>
+                        <h3 class="card-title">CHL (Connected Health Lab)</h3>
+                        <p class="card-desc">Description de la Catégorie 5</p>
                     </div>
-                    <h3 class="card-title">Présence</h3>
-                    <div class="card-value">95%</div>
-                    <p class="card-description">Taux de présence moyen</p>
+                    <i class="fas fa-stethoscope card-icon"></i>
+
                 </div>
                 
                 <!-- Card 6 -->
+                      <a href="{% url 'home2' %}" class="card-link">
                 <div class="card">
-                    <div class="card-icon">
-                        <i class="fas fa-clipboard-list"></i>
+                    <div>
+                        <h3 class="card-title">Vie étudiante et Engagement</h3>
+                        <p class="card-desc">Description de la Catégorie 6</p>
                     </div>
-                    <h3 class="card-title">Évaluations</h3>
-                    <div class="card-value">156</div>
-                    <p class="card-description">Évaluations prévues ce semestre</p>
+                    <i class="fas fa-handshake card-icon"></i>
                 </div>
                 
                 <!-- Card 7 -->
+                      <a href="{% url 'home2' %}" class="card-link">
                 <div class="card">
-                    <div class="card-icon">
-                        <i class="fas fa-coins"></i>
+                    <div>
+                        <h3 class="card-title">Réseau Alumni et Entrepreneuriat</h3>
+                        <p class="card-desc">Description de la Catégorie 7</p>
                     </div>
-                    <h3 class="card-title">Budget annuel</h3>
-                    <div class="card-value">850K €</div>
-                    <p class="card-description">Budget total de l'établissement</p>
+                    <i class="fas fa-lightbulb card-icon"></i>
+
                 </div>
                 
                 <!-- Card 8 -->
+                      <a href="{% url 'home2' %}" class="card-link">
                 <div class="card">
-                    <div class="card-icon">
-                        <i class="fas fa-briefcase"></i>
+                    <div>
+                        <h3 class="card-title">Pilotage, Qualité et Gouvernance</h3>
+                        <p class="card-desc">Description de la Catégorie 8</p>
                     </div>
-                    <h3 class="card-title">Partenariats</h3>
-                    <div class="card-value">18</div>
-                    <p class="card-description">Entreprises partenaires</p>
+                    <i class="fas fa-trophy card-icon"></i>
                 </div>
                 
-                <!-- Card 9 -->
+                <!-- Card 9 --> 
+                     <a href="{% url 'home2' %}" class="card-link">
+
                 <div class="card">
-                    <div class="card-icon">
-                        <i class="fas fa-clock"></i>
+                    <div>
+                        <h3 class="card-title">Résultats et Performance Formation</h3>
+                        <p class="card-desc">Description de la Catégorie 9</p>
                     </div>
-                    <h3 class="card-title">Heures d'enseignement</h3>
-                    <div class="card-value">12,450</div>
-                    <p class="card-description">Heures dispensées cette année</p>
+                   <i class="fas fa-chart-line card-icon"></i>
                 </div>
-                
-                <!-- Card 10 -->
-                <div class="card">
-                    <div class="card-icon">
-                        <i class="fas fa-graduation-cap"></i>
-                    </div>
-                    <h3 class="card-title">Diplômés</h3>
-                    <div class="card-value">124</div>
-                    <p class="card-description">Diplômés de la dernière promotion</p>
-                </div>
-                
-                <!-- Card 11 -->
-                <div class="card">
-                    <div class="card-icon">
-                        <i class="fas fa-building"></i>
-                    </div>
-                    <h3 class="card-title">Salles</h3>
-                    <div class="card-value">35</div>
-                    <p class="card-description">Nombre de salles équipées</p>
-                </div>
-                
-                <!-- Card 12 -->
+            </body>
+            </html>                

@@ -323,9 +323,16 @@
         <div class="container-fluid">
           <a class="navbar-brand" href="#">
              <img src="{% static 'images/isis.png' %}" alt="Logo Institut" class="logo-img" />
-                  École d'ingénieurs ISIS - Informatique et Systèmes d'Information pour la Santé
+                    <strong>École d'ingénieurs ISIS - Informatique et Systèmes d'Information pour la Santé</strong>
             </a>
-            <button 
+          
+            <div class="ms-auto d-flex align-items-center">
+                <span class="me-3">Admin</span>
+                <div class="dropdown">
+                    <button class="btn btn-sm" type="button" id="userMenu" data-bs-toggle="dropdown" aria-expanded="false">
+                        <i class="fas fa-user-circle fa-lg"></i>
+                    </button>
+                      <button 
              onclick="document.body.classList.toggle('dark-mode')" 
             style="
             font-size: 16px;
@@ -333,15 +340,9 @@
             border: none;
             background: transparent;
             cursor: pointer;
-            margin-left:150px;
+            margin-left:10px;
             "
             >🌓</button>
-            <div class="ms-auto d-flex align-items-center">
-                <span class="me-3">Bienvenue, Admin</span>
-                <div class="dropdown">
-                    <button class="btn btn-sm" type="button" id="userMenu" data-bs-toggle="dropdown" aria-expanded="false">
-                        <i class="fas fa-user-circle fa-lg"></i>
-                    </button>
                     <ul class="dropdown-menu dropdown-menu-end" aria-labelledby="userMenu">
                         <li><a class="dropdown-item" href="#"><i class="fas fa-user me-2"></i>Profil</a></li>
                         <li><a class="dropdown-item" href="#"><i class="fas fa-cog me-2"></i>Paramètres</a></li>
