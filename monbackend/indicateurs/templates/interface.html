@@ -1,0 +1,402 @@
+<!DOCTYPE html>
+{% load static %}
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Tableau de Bord École</title>
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet">
+    <style>
+        :root {
+            --primary-color: #9d7a8c; /* mauve doux */
+            --secondary-color: #d4b9a4; /* nude */
+            --tertiary-color: #a88c7d; /* ton terre */
+            --light-color: #f7f3f1; /* très clair pour le fond */
+            --dark-color: #484041; /* sombre pour le texte */
+            --shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+            --radius: 10px;
+            --transition: all 0.3s ease;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+
+        body {
+            background-color: var(--light-color);
+            color: var(--dark-color);
+            display: flex;
+            min-height: 100vh;
+        }
+
+        /* Sidebar */
+        .sidebar {
+            width: 250px;
+            background-color: white;
+            box-shadow: var(--shadow);
+            padding: 20px 0;
+            display: flex;
+            flex-direction: column;
+            z-index: 10;
+        }
+
+        .sidebar-link {
+            padding: 12px 20px;
+            display: flex;
+            align-items: center;
+            color: var(--dark-color);
+            text-decoration: none;
+            transition: var(--transition);
+            margin: 2px 10px;
+            border-radius: var(--radius);
+        }
+
+        .sidebar-link:hover {
+            background-color: var(--primary-color);
+            color: white;
+        }
+
+        .sidebar-link i {
+            margin-right: 10px;
+            width: 20px;
+            text-align: center;
+        }
+
+        .sidebar-link.active {
+            background-color: var(--primary-color);
+            color: white;
+        }
+
+        /* Main Content */
+        .main-content {
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+            overflow-x: hidden;
+        }
+
+        /* Navbar */
+        .navbar {
+            background-color: white;
+            padding: 15px 20px;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            box-shadow: var(--shadow);
+            position: sticky;
+            top: 0;
+            z-index: 5;
+        }
+
+        .brand {
+         display: flex;
+         align-items: center;
+         }
+
+        .brand img {
+         width: 60px;
+        height: auto;
+        transition: var(--transition);
+        margin-right: 15px;
+         }
+
+        .brand:hover img {
+         transform: scale(1.05);  /* Légère augmentation au survol */
+        }
+
+         .school-name {
+        font-size: 1.2rem;
+        font-weight: 600;
+         color: var(--primary-color);
+        }
+
+        .school-name {
+            font-size: 1.2rem;
+            font-weight: 600;
+            color: var(--primary-color);
+        }
+
+        .user-menu {
+            display: flex;
+            align-items: center;
+        }
+
+        .welcome-message {
+            margin-right: 15px;
+        }
+
+        .logout-btn {
+            background-color: transparent;
+            border: 1px solid var(--tertiary-color);
+            border-radius: var(--radius);
+            padding: 8px 12px;
+            color: var(--tertiary-color);
+            cursor: pointer;
+            transition: var(--transition);
+            display: flex;
+            align-items: center;
+        }
+
+        .logout-btn:hover {
+            background-color: var(--tertiary-color);
+            color: white;
+        }
+
+        .logout-btn i {
+            margin-left: 5px;
+        }
+
+        /* Dashboard Content */
+        .dashboard {
+            padding: 20px;
+            flex: 1;
+        }
+
+        .dashboard-title {
+            margin-bottom: 20px;
+            color: var(--primary-color);
+        }
+
+        .cards-container {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+            gap: 20px;
+        }
+
+        .card {
+            background-color: white;
+            border-radius: var(--radius);
+            box-shadow: var(--shadow);
+            padding: 20px;
+            transition: var(--transition);
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            text-align: center;
+        }
+
+        .card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 6px 12px rgba(0, 0, 0, 0.1);
+        }
+
+        .card-icon {
+            width: 60px;
+            height: 60px;
+            border-radius: 50%;
+            background-color: var(--light-color);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin-bottom: 15px;
+        }
+
+        .card-icon i {
+            font-size: 1.5rem;
+            color: var(--primary-color);
+        }
+
+        .card-title {
+            font-size: 1.1rem;
+            margin-bottom: 10px;
+            color: var(--tertiary-color);
+            font-weight: 600;
+        }
+
+        .card-value {
+            font-size: 1.8rem;
+            font-weight: 700;
+            color: var(--dark-color);
+        }
+
+        .card-description {
+            margin-top: 10px;
+            color: #777;
+            font-size: 0.9rem;
+        }
+
+        /* Responsive */
+        @media (max-width: 768px) {
+            body {
+                flex-direction: column;
+            }
+            
+            .sidebar {
+                width: 100%;
+                padding: 10px 0;
+            }
+            
+            .cards-container {
+                grid-template-columns: 1fr;
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- Sidebar -->
+    <div class="sidebar">
+        <a href="#" class="sidebar-link active">
+            <i class="fas fa-tachometer-alt"></i>
+            Tableau de bord
+        </a>
+        <a href="#" class="sidebar-link">
+            <i class="fas fa-user-graduate"></i>
+            Élèves
+        </a>
+        <a href="#" class="sidebar-link">
+            <i class="fas fa-chalkboard-teacher"></i>
+            Enseignants
+        </a>
+        <a href="#" class="sidebar-link">
+            <i class="fas fa-book"></i>
+            Cours
+        </a>
+        <a href="#" class="sidebar-link">
+            <i class="fas fa-calendar-alt"></i>
+            Calendrier
+        </a>
+        <a href="#" class="sidebar-link">
+            <i class="fas fa-chart-bar"></i>
+            Statistiques
+        </a>
+        <a href="#" class="sidebar-link">
+            <i class="fas fa-cog"></i>
+            Paramètres
+        </a>
+    </div>
+
+    <!-- Main Content -->
+    <div class="main-content">
+        <!-- Navbar -->
+        <div class="navbar">
+            <div class="brand">
+                 <img src="{% static 'images/isis.png' %}" alt="Logo Institut" class="logo-img" />
+                <div class="school-name">École d'ingénieurs ISIS - Informatique et Systèmes d'Information pour la Santé</div>
+            </div>
+            <div class="user-menu">
+                <div class="welcome-message">Bienvenue, Admin</div>
+                <button class="logout-btn">
+                    Déconnexion <i class="fas fa-sign-out-alt"></i>
+                </button>
+            </div>
+        </div>
+
+        <!-- Dashboard Content -->
+        <div class="dashboard">
+            <h2 class="dashboard-title">Tableau de bord administratif</h2>
+            
+            <div class="cards-container">
+                <!-- Card 1 -->
+                <div class="card">
+                    <div class="card-icon">
+                        <i class="fas fa-user-graduate"></i>
+                    </div>
+                    <h3 class="card-title">Effectif total</h3>
+                    <div class="card-value">523</div>
+                    <p class="card-description">Nombre total d'élèves inscrits</p>
+                </div>
+                
+                <!-- Card 2 -->
+                <div class="card">
+                    <div class="card-icon">
+                        <i class="fas fa-chalkboard-teacher"></i>
+                    </div>
+                    <h3 class="card-title">Personnel enseignant</h3>
+                    <div class="card-value">42</div>
+                    <p class="card-description">Nombre total d'enseignants</p>
+                </div>
+                
+                <!-- Card 3 -->
+                <div class="card">
+                    <div class="card-icon">
+                        <i class="fas fa-book"></i>
+                    </div>
+                    <h3 class="card-title">Cours actifs</h3>
+                    <div class="card-value">24</div>
+                    <p class="card-description">Cours dispensés ce semestre</p>
+                </div>
+                
+                <!-- Card 4 -->
+                <div class="card">
+                    <div class="card-icon">
+                        <i class="fas fa-percent"></i>
+                    </div>
+                    <h3 class="card-title">Taux de réussite</h3>
+                    <div class="card-value">92%</div>
+                    <p class="card-description">Pourcentage de réussite aux examens</p>
+                </div>
+                
+                <!-- Card 5 -->
+                <div class="card">
+                    <div class="card-icon">
+                        <i class="fas fa-calendar-check"></i>
+                    </div>
+                    <h3 class="card-title">Présence</h3>
+                    <div class="card-value">95%</div>
+                    <p class="card-description">Taux de présence moyen</p>
+                </div>
+                
+                <!-- Card 6 -->
+                <div class="card">
+                    <div class="card-icon">
+                        <i class="fas fa-clipboard-list"></i>
+                    </div>
+                    <h3 class="card-title">Évaluations</h3>
+                    <div class="card-value">156</div>
+                    <p class="card-description">Évaluations prévues ce semestre</p>
+                </div>
+                
+                <!-- Card 7 -->
+                <div class="card">
+                    <div class="card-icon">
+                        <i class="fas fa-coins"></i>
+                    </div>
+                    <h3 class="card-title">Budget annuel</h3>
+                    <div class="card-value">850K €</div>
+                    <p class="card-description">Budget total de l'établissement</p>
+                </div>
+                
+                <!-- Card 8 -->
+                <div class="card">
+                    <div class="card-icon">
+                        <i class="fas fa-briefcase"></i>
+                    </div>
+                    <h3 class="card-title">Partenariats</h3>
+                    <div class="card-value">18</div>
+                    <p class="card-description">Entreprises partenaires</p>
+                </div>
+                
+                <!-- Card 9 -->
+                <div class="card">
+                    <div class="card-icon">
+                        <i class="fas fa-clock"></i>
+                    </div>
+                    <h3 class="card-title">Heures d'enseignement</h3>
+                    <div class="card-value">12,450</div>
+                    <p class="card-description">Heures dispensées cette année</p>
+                </div>
+                
+                <!-- Card 10 -->
+                <div class="card">
+                    <div class="card-icon">
+                        <i class="fas fa-graduation-cap"></i>
+                    </div>
+                    <h3 class="card-title">Diplômés</h3>
+                    <div class="card-value">124</div>
+                    <p class="card-description">Diplômés de la dernière promotion</p>
+                </div>
+                
+                <!-- Card 11 -->
+                <div class="card">
+                    <div class="card-icon">
+                        <i class="fas fa-building"></i>
+                    </div>
+                    <h3 class="card-title">Salles</h3>
+                    <div class="card-value">35</div>
+                    <p class="card-description">Nombre de salles équipées</p>
+                </div>
+                
+                <!-- Card 12 -->

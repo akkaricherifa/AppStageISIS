@@ -1,0 +1,534 @@
+<!DOCTYPE html>
+{% load static %}
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Tableau de Bord - École</title>
+     <link rel="stylesheet" href="{% static 'style.css' %}">
+    <!-- Bootstrap CSS -->
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap/5.3.0/css/bootstrap.min.css" rel="stylesheet">
+    <!-- Font Awesome pour les icônes -->
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet">
+    <!-- Chart.js pour les graphiques -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/4.3.0/chart.umd.min.js"></script>
+    <style>
+        :root {
+            --nude: #e6d2c7;
+            --mauve: #9b85a7;
+            --light-mauve: #d4c6d9;
+            --earth-tone: #a88c76;
+            --light-earth: #e8dfd5;
+            --dark-text: #4d4d4d;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background-color: #f9f5f2;
+            color: var(--dark-text);
+        }
+
+        /* Navbar */
+        .navbar {
+            background-color: white;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.05);
+        }
+
+        .navbar-brand img {
+            height: 70px;
+            width: auto;
+            transition: all 0.3s ease;
+            transform: scale(1.05);
+        }
+
+        /* Sidebar */
+        .sidebar {
+            background-color: white;
+            min-height: calc(100vh - 56px);
+            box-shadow: 2px 0 10px rgba(0, 0, 0, 0.05);
+            padding-top: 20px;
+        }
+
+        .nav-link {
+            color: var(--dark-text);
+            border-radius: 0;
+            padding: 12px 20px;
+            margin: 5px 0;
+            transition: all 0.3s;
+        }
+
+        .nav-link.active {
+            background-color: var(--light-mauve);
+            color: var(--dark-text);
+            border-left: 4px solid var(--mauve);
+        }
+
+        .nav-link:hover {
+            background-color: var(--light-earth);
+        }
+
+        .nav-link i {
+            margin-right: 10px;
+            width: 20px;
+            text-align: center;
+        }
+
+        /* Content area */
+        .content-area {
+            padding: 30px;
+            background-color: #f9f5f2;
+        }
+
+        .dashboard-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 30px;
+        }
+
+        .dashboard-title {
+            color: var(--mauve);
+            font-weight: 600;
+        }
+
+        .action-buttons {
+            display: flex;
+            gap: 15px;
+            margin-bottom: 30px;
+        }
+
+        .btn-modify {
+            background-color: var(--mauve);
+            color: white;
+            border: none;
+            padding: 8px 20px;
+            border-radius: 5px;
+            transition: all 0.3s;
+        }
+
+        .btn-modify:hover {
+            background-color: #8a7495;
+        }
+
+        .btn-view {
+            background-color: var(--earth-tone);
+            color: white;
+            border: none;
+            padding: 8px 20px;
+            border-radius: 5px;
+            transition: all 0.3s;
+        }
+
+        .btn-view:hover {
+            background-color: #977c68;
+        }
+
+        /* Form Styles */
+        .edit-form {
+            background-color: white;
+            padding: 25px;
+            border-radius: 8px;
+            box-shadow: 0 2px 15px rgba(0, 0, 0, 0.08);
+            margin-bottom: 30px;
+        }
+
+        .form-control {
+            border: 1px solid #e0e0e0;
+            padding: 10px 15px;
+            border-radius: 5px;
+        }
+
+        .form-label {
+            color: var(--dark-text);
+            font-weight: 500;
+        }
+
+        /* Dashboard Cards */
+        .stat-card {
+            background-color: white;
+            border-radius: 8px;
+            padding: 20px;
+            margin-bottom: 20px;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.05);
+            transition: transform 0.3s;
+        }
+
+        .stat-card:hover {
+            transform: translateY(-5px);
+        }
+
+        .stat-card-header {
+            color: var(--mauve);
+            font-weight: 600;
+            margin-bottom: 15px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .stat-card-icon {
+            width: 40px;
+            height: 40px;
+            background-color: var(--light-mauve);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: var(--mauve);
+        }
+
+        /* Chart containers */
+        .chart-container {
+            height: 300px;
+            margin-bottom: 20px;
+        }
+
+
+        .dark-mode {
+          --nude: #2e2e2e;
+        --mauve: #b9a7c4;
+         --light-mauve: #4b3f56;
+          --earth-tone: #78614f;
+          --light-earth: #5c4a3a;
+        --dark-text: #e0e0e0;
+          background-color: #1f1f1f;
+          color: var(--dark-text);
+          }
+
+         .dark-mode .navbar,
+         .dark-mode .sidebar,
+         .dark-mode .edit-form,
+         .dark-mode .stat-card {
+         background-color: #2b2b2b;
+         box-shadow: 0 2px 10px rgba(255, 255, 255, 0.05);
+        }
+
+         .dark-mode .nav-link {
+        color: var(--dark-text);
+        }
+
+          .dark-mode .nav-link.active {
+        background-color: var(--light-mauve);
+        color: var(--dark-text);
+         border-left: 4px solid var(--mauve);
+         }
+
+        .dark-mode .nav-link:hover {
+         background-color: var(--light-earth);
+        }
+
+   
+    </style>
+</head>
+<body>
+    <!-- Navbar -->
+    <nav class="navbar navbar-expand-lg navbar-light">
+        <div class="container-fluid">
+            <a class="navbar-brand" href="#">
+             <img src="{% static 'images/isis.png' %}" alt="Logo Institut" class="logo-img" />
+                  École d'ingénieurs ISIS - Informatique et Systèmes d'Information pour la Santé
+            </a>
+            <button 
+             onclick="document.body.classList.toggle('dark-mode')" 
+            style="
+            font-size: 16px;
+            padding: 2px 5px;
+            border: none;
+            background: transparent;
+            cursor: pointer;
+            margin-left:150px;
+            "
+            >🌓</button>
+
+            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+            <div class="collapse navbar-collapse" id="navbarNav">
+                <ul class="navbar-nav ms-auto">
+                    <li class="nav-item">
+                        <a class="nav-link" href="#"><i class="fas fa-bell"></i></a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="#"><i class="fas fa-cog"></i></a>
+                    </li>
+                    <li class="nav-item dropdown">
+                        <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button" data-bs-toggle="dropdown">
+                            <i class="fas fa-user-circle"></i> Admin
+                        </a>
+                        <ul class="dropdown-menu dropdown-menu-end">
+                            <li><a class="dropdown-item" href="#"><i class="fas fa-user"></i> Profil</a></li>
+                            <li><a class="dropdown-item" href="#"><i class="fas fa-sign-out-alt"></i> Déconnexion</a></li>
+                        </ul>
+                    </li>
+                </ul>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Main Container -->
+    <div class="container-fluid">
+        <div class="row">
+            <!-- Sidebar -->
+            <div class="col-md-3 col-lg-2 sidebar">
+                <div class="d-flex flex-column">
+                    <a class="nav-link active" href="#">
+                        <i class="fas fa-tachometer-alt"></i> Tableau de bord
+                    </a>
+                    <a class="nav-link" href="#">
+                        <i class="fas fa-user-graduate"></i> Étudiants
+                    </a>
+                    <a class="nav-link" href="#">
+                        <i class="fas fa-chalkboard-teacher"></i> Enseignants
+                    </a>
+                    <a class="nav-link" href="#">
+                        <i class="fas fa-book"></i> Cours
+                    </a>
+                    <a class="nav-link" href="#">
+                        <i class="fas fa-chart-line"></i> Statistiques
+                    </a>
+                    <a class="nav-link" href="#">
+                        <i class="fas fa-calendar-alt"></i> Calendrier
+                    </a>
+                    <a class="nav-link" href="#">
+                        <i class="fas fa-cog"></i> Paramètres
+                    </a>
+                </div>
+            </div>
+
+            <!-- Content Area -->
+            <div class="col-md-9 col-lg-10 content-area">
+                <div class="dashboard-header">
+                    <h2 class="dashboard-title">Tableau de bord</h2>
+                    <div class="date">
+                        <i class="far fa-calendar-alt"></i> 11 Mai 2025
+                    </div>
+                </div>
+
+                <!-- Action Buttons -->
+                <div class="action-buttons">
+                    <button class="btn btn-modify" id="modifyBtn">
+                        <i class="fas fa-edit"></i> Modifier
+                    </button>
+                    <button class="btn btn-view" id="viewBtn">
+                        <i class="fas fa-chart-bar"></i> Afficher
+                    </button>
+                </div>
+
+                <!-- Edit Form - Initially Hidden -->
+                <div class="edit-form" id="editForm" style="display: none;">
+                    <h4 class="mb-4">Modifier les informations</h4>
+                    <form>
+                        <div class="row mb-3">
+                            <div class="col-md-6">
+                                <label for="schoolName" class="form-label">Nom de l'école</label>
+                                <input type="text" class="form-control" id="schoolName" value="Institut d'Études Supérieures">
+                            </div>
+                            <div class="col-md-6">
+                                <label for="academicYear" class="form-label">Année académique</label>
+                                <input type="text" class="form-control" id="academicYear" value="2024-2025">
+                            </div>
+                        </div>
+                        <div class="row mb-3">
+                            <div class="col-md-6">
+                                <label for="totalStudents" class="form-label">Nombre total d'étudiants</label>
+                                <input type="number" class="form-control" id="totalStudents" value="1250">
+                            </div>
+                            <div class="col-md-6">
+                                <label for="totalTeachers" class="form-label">Nombre total d'enseignants</label>
+                                <input type="number" class="form-control" id="totalTeachers" value="85">
+                            </div>
+                        </div>
+                        <div class="d-flex justify-content-end">
+                            <button type="button" class="btn btn-secondary me-2" id="cancelEdit">Annuler</button>
+                            <button type="submit" class="btn btn-modify">Enregistrer</button>
+                        </div>
+                    </form>
+                </div>
+
+                <!-- Charts Section -->
+                <div class="row charts-section" id="chartsSection">
+                    <div class="col-md-6 mb-4">
+                        <div class="stat-card">
+                            <div class="stat-card-header">
+                                <span>Répartition des étudiants par filière</span>
+                                <div class="stat-card-icon">
+                                    <i class="fas fa-chart-pie"></i>
+                                </div>
+                            </div>
+                            <div class="chart-container">
+                                <canvas id="pieChart"></canvas>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="col-md-6 mb-4">
+                        <div class="stat-card">
+                            <div class="stat-card-header">
+                                <span>Taux de réussite par niveau</span>
+                                <div class="stat-card-icon">
+                                    <i class="fas fa-chart-bar"></i>
+                                </div>
+                            </div>
+                            <div class="chart-container">
+                                <canvas id="barChart"></canvas>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="col-md-6 mb-4">
+                        <div class="stat-card">
+                            <div class="stat-card-header">
+                                <span>Évolution des inscriptions</span>
+                                <div class="stat-card-icon">
+                                    <i class="fas fa-chart-line"></i>
+                                </div>
+                            </div>
+                            <div class="chart-container">
+                                <canvas id="lineChart"></canvas>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="col-md-6 mb-4">
+                        <div class="stat-card">
+                            <div class="stat-card-header">
+                                <span>Compétences acquises</span>
+                                <div class="stat-card-icon">
+                                    <i class="fas fa-chart-radar"></i>
+                                </div>
+                            </div>
+                            <div class="chart-container">
+                                <canvas id="radarChart"></canvas>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Bootstrap JS & Popper.js -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap/5.3.0/js/bootstrap.bundle.min.js"></script>
+    <script>
+        // Toggle Edit Form
+        document.getElementById('modifyBtn').addEventListener('click', function() {
+            document.getElementById('editForm').style.display = 'block';
+            document.getElementById('chartsSection').style.display = 'none';
+        });
+
+        document.getElementById('cancelEdit').addEventListener('click', function() {
+            document.getElementById('editForm').style.display = 'none';
+            document.getElementById('chartsSection').style.display = '';
+        });
+
+        // Toggle Charts View
+        document.getElementById('viewBtn').addEventListener('click', function() {
+            document.getElementById('editForm').style.display = 'none';
+            document.getElementById('chartsSection').style.display = '';
+        });
+
+        // Initialize Charts
+        document.addEventListener('DOMContentLoaded', function() {
+            // Pie Chart - Student Distribution
+            const pieCtx = document.getElementById('pieChart').getContext('2d');
+            new Chart(pieCtx, {
+                type: 'pie',
+                data: {
+                    labels: ['Sciences', 'Commerce', 'Lettres', 'Ingénierie', 'Arts'],
+                    datasets: [{
+                        data: [350, 275, 200, 300, 125],
+                        backgroundColor: [
+                            '#9b85a7', // mauve
+                            '#a88c76', // earth tone
+                            '#e6d2c7', // nude
+                            '#d4c6d9', // light mauve
+                            '#e8dfd5', // light earth
+                        ],
+                        borderColor: 'white',
+                        borderWidth: 1
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false
+                }
+            });
+
+            // Bar Chart - Success Rate
+            const barCtx = document.getElementById('barChart').getContext('2d');
+            new Chart(barCtx, {
+                type: 'bar',
+                data: {
+                    labels: ['1ère année', '2ème année', '3ème année', 'Master 1', 'Master 2'],
+                    datasets: [{
+                        label: 'Taux de réussite (%)',
+                        data: [75, 82, 88, 90, 95],
+                        backgroundColor: '#9b85a7', // mauve
+                        borderColor: '#8a7495',
+                        borderWidth: 1
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    scales: {
+                        y: {
+                            beginAtZero: true,
+                            max: 100
+                        }
+                    }
+                }
+            });
+
+            // Line Chart - Enrollment Evolution
+            const lineCtx = document.getElementById('lineChart').getContext('2d');
+            new Chart(lineCtx, {
+                type: 'line',
+                data: {
+                    labels: ['2021', '2022', '2023', '2024', '2025'],
+                    datasets: [{
+                        label: 'Nombre d\'inscriptions',
+                        data: [980, 1050, 1120, 1190, 1250],
+                        backgroundColor: 'rgba(168, 140, 118, 0.2)', // earth tone with opacity
+                        borderColor: '#a88c76', // earth tone
+                        tension: 0.3,
+                        borderWidth: 2,
+                        pointBackgroundColor: '#a88c76'
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false
+                }
+            });
+
+            // Radar Chart - Skills
+            const radarCtx = document.getElementById('radarChart').getContext('2d');
+            new Chart(radarCtx, {
+                type: 'radar',
+                data: {
+                    labels: ['Communication', 'Technique', 'Collaboration', 'Recherche', 'Innovation', 'Adaptation'],
+                    datasets: [{
+                        label: 'Niveau moyen',
+                        data: [75, 85, 70, 80, 65, 78],
+                        backgroundColor: 'rgba(155, 133, 167, 0.2)', // mauve with opacity
+                        borderColor: '#9b85a7', // mauve
+                        borderWidth: 2,
+                        pointBackgroundColor: '#9b85a7'
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    scales: {
+                        r: {
+                            beginAtZero: true,
+                            max: 100
+                        }
+                    }
+                }
+            });
+        });
+    </script>
+</body>
+</html>

@@ -1,0 +1,691 @@
+<!DOCTYPE html>
+{% load static %}
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Tableau de Bord - Institut</title>
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap/5.3.0/css/bootstrap.min.css" rel="stylesheet">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet">
+    <style>
+        :root {
+            --nude: #e6d2c6;
+            --light-nude: #f5efe9;
+            --mauve: #9c8aa5;
+            --light-mauve: #d1c5d7;
+            --earth-brown: #785e4d;
+            --earth-green: #879e80;
+            --text-dark: #333333;
+            --sidebar-width: 240px;
+        }
+        
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background-color: var(--light-nude);
+            color: var(--text-dark);
+            margin: 0;
+            padding: 0;
+            min-height: 100vh;
+        }
+        
+        /* Navbar styles */
+        .navbar {
+            background-color: white;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+            height: 60px;
+            padding: 0 20px;
+            position: fixed;
+            width: 100%;
+            top: 0;
+            z-index: 1000;
+        }
+        
+        .navbar-brand {
+            display: flex;
+            align-items: center;
+        }
+        
+        .navbar-brand img {
+            height: 70px;
+            width: auto;
+            transition: all 0.3s ease;
+            transform: scale(1.05);
+        }
+        
+        .navbar-title {
+            font-size: 1.2rem;
+            font-weight: 600;
+            color: var(--earth-brown);
+        }
+        
+        /* Sidebar styles */
+        .sidebar {
+            position: fixed;
+            top: 60px;
+            left: 0;
+            width: var(--sidebar-width);
+            height: calc(100vh - 60px);
+            background-color: white;
+            box-shadow: 2px 0 10px rgba(0, 0, 0, 0.1);
+            padding-top: 20px;
+            transition: all 0.3s;
+            z-index: 900;
+        }
+        
+        .nav-item {
+            margin-bottom: 5px;
+            border-radius: 0 20px 20px 0;
+            overflow: hidden;
+            position: relative;
+        }
+        
+        .nav-link {
+            color: var(--text-dark);
+            padding: 12px 20px;
+            display: flex;
+            align-items: center;
+            transition: all 0.3s;
+            font-weight: 500;
+        }
+        
+        .nav-link i {
+            margin-right: 10px;
+            font-size: 1.1rem;
+            width: 24px;
+            text-align: center;
+        }
+        
+        .nav-link:hover, .nav-link.active {
+            background-color: var(--light-mauve);
+            color: var(--earth-brown);
+        }
+        
+        .nav-link.active::before {
+            content: '';
+            position: absolute;
+            left: 0;
+            top: 0;
+            height: 100%;
+            width: 4px;
+            background-color: var(--mauve);
+        }
+        
+        /* Main content styles */
+        .main-content {
+            margin-left: var(--sidebar-width);
+            margin-top: 60px;
+            padding: 20px;
+            min-height: calc(100vh - 60px);
+        }
+        
+        .dashboard-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 20px;
+            padding-bottom: 15px;
+            border-bottom: 1px solid var(--nude);
+        }
+        
+        .dashboard-title {
+            font-size: 1.8rem;
+            font-weight: 600;
+            color: var(--earth-brown);
+        }
+        
+        /* Card styles */
+        .dashboard-card {
+            background-color: white;
+            border-radius: 12px;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05);
+            padding: 20px;
+            margin-bottom: 20px;
+            transition: transform 0.3s, box-shadow 0.3s;
+        }
+        
+        .dashboard-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 8px 16px rgba(0, 0, 0, 0.1);
+        }
+        
+        .card-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 15px;
+        }
+        
+        .card-title {
+            font-size: 1.2rem;
+            font-weight: 600;
+            color: var(--earth-brown);
+        }
+        
+        /* Button styles */
+        .btn-custom {
+            background-color: var(--mauve);
+            color: white;
+            border: none;
+            padding: 8px 16px;
+            border-radius: 6px;
+            font-weight: 500;
+            transition: all 0.3s;
+            display: inline-flex;
+            align-items: center;
+        }
+        
+        .btn-custom i {
+            margin-right: 8px;
+        }
+        
+        .btn-custom:hover {
+            background-color: var(--earth-brown);
+            transform: translateY(-2px);
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.15);
+            color: white;
+        }
+        
+        .btn-edit {
+            background-color: var(--earth-green);
+        }
+        
+        .btn-view {
+            background-color: var(--mauve);
+        }
+        
+        /* Form modal styles */
+        .edit-form-overlay {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0, 0, 0, 0.5);
+            z-index: 1100;
+            align-items: center;
+            justify-content: center;
+        }
+        
+        .edit-form {
+            background-color: white;
+            border-radius: 12px;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.2);
+            padding: 25px;
+            width: 90%;
+            max-width: 500px;
+        }
+        
+        .form-title {
+            font-size: 1.4rem;
+            font-weight: 600;
+            color: var(--earth-brown);
+            margin-bottom: 20px;
+            padding-bottom: 10px;
+            border-bottom: 2px solid var(--light-mauve);
+        }
+        
+        .form-control {
+            border: 1px solid var(--light-mauve);
+            border-radius: 6px;
+            padding: 10px 15px;
+            margin-bottom: 15px;
+            transition: all 0.3s;
+        }
+        
+        .form-control:focus {
+            border-color: var(--mauve);
+            box-shadow: 0 0 0 0.2rem rgba(156, 138, 165, 0.25);
+        }
+        
+        .form-actions {
+            display: flex;
+            justify-content: flex-end;
+            gap: 10px;
+            margin-top: 20px;
+        }
+        
+        /* Chart containers */
+        .chart-container {
+            height: 300px;
+            margin-bottom: 20px;
+        }
+
+        /* Responsive adjustments */
+        @media (max-width: 992px) {
+            .sidebar {
+                width: 60px;
+                transform: translateX(0);
+            }
+            
+            .sidebar .nav-link span {
+                display: none;
+            }
+            
+            .main-content {
+                margin-left: 60px;
+            }
+            
+            .nav-link i {
+                margin-right: 0;
+            }
+        }
+        
+        @media (max-width: 576px) {
+            .dashboard-header {
+                flex-direction: column;
+                align-items: flex-start;
+            }
+            
+            .chart-container {
+                height: 250px;
+            }
+        }
+
+        .dark-mode {
+          --nude: #2e2e2e;
+        --mauve: #b9a7c4;
+         --light-mauve: #4b3f56;
+          --earth-tone: #78614f;
+          --light-earth: #5c4a3a;
+        --dark-text: #e0e0e0;
+          background-color: #1f1f1f;
+          color: var(--dark-text);
+          }
+
+         .dark-mode .navbar,
+         .dark-mode .sidebar,
+         .dark-mode .edit-form,
+         .dark-mode .stat-card {
+         background-color: #2b2b2b;
+         box-shadow: 0 2px 10px rgba(255, 255, 255, 0.05);
+        }
+
+         .dark-mode .nav-link {
+        color: var(--dark-text);
+        }
+
+          .dark-mode .nav-link.active {
+        background-color: var(--light-mauve);
+        color: var(--dark-text);
+         border-left: 4px solid var(--mauve);
+         }
+
+        .dark-mode .nav-link:hover {
+         background-color: var(--light-earth);
+        }
+
+    </style>
+</head>
+<body>
+    <!-- Navbar -->
+    <nav class="navbar navbar-expand-lg">
+        <div class="container-fluid">
+          <a class="navbar-brand" href="#">
+             <img src="{% static 'images/isis.png' %}" alt="Logo Institut" class="logo-img" />
+                  École d'ingénieurs ISIS - Informatique et Systèmes d'Information pour la Santé
+            </a>
+            <button 
+             onclick="document.body.classList.toggle('dark-mode')" 
+            style="
+            font-size: 16px;
+            padding: 2px 5px;
+            border: none;
+            background: transparent;
+            cursor: pointer;
+            margin-left:150px;
+            "
+            >🌓</button>
+            <div class="ms-auto d-flex align-items-center">
+                <span class="me-3">Bienvenue, Admin</span>
+                <div class="dropdown">
+                    <button class="btn btn-sm" type="button" id="userMenu" data-bs-toggle="dropdown" aria-expanded="false">
+                        <i class="fas fa-user-circle fa-lg"></i>
+                    </button>
+                    <ul class="dropdown-menu dropdown-menu-end" aria-labelledby="userMenu">
+                        <li><a class="dropdown-item" href="#"><i class="fas fa-user me-2"></i>Profil</a></li>
+                        <li><a class="dropdown-item" href="#"><i class="fas fa-cog me-2"></i>Paramètres</a></li>
+                        <li><hr class="dropdown-divider"></li>
+                        <li><a class="dropdown-item" href="#"><i class="fas fa-sign-out-alt me-2"></i>Déconnexion</a></li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Sidebar -->
+    <div class="sidebar">
+        <ul class="nav flex-column">
+            <li class="nav-item">
+                <a class="nav-link active" href="#">
+                    <i class="fas fa-home"></i>
+                    <span>Accueil</span>
+                </a>
+            </li>
+            <li class="nav-item">
+                <a class="nav-link" href="#">
+                    <i class="fas fa-user-graduate"></i>
+                    <span>Étudiants</span>
+                </a>
+            </li>
+            <li class="nav-item">
+                <a class="nav-link" href="#">
+                    <i class="fas fa-chalkboard-teacher"></i>
+                    <span>Enseignants</span>
+                </a>
+            </li>
+            <li class="nav-item">
+                <a class="nav-link" href="#">
+                    <i class="fas fa-book"></i>
+                    <span>Cours</span>
+                </a>
+            </li>
+            <li class="nav-item">
+                <a class="nav-link" href="#">
+                    <i class="fas fa-chart-line"></i>
+                    <span>Statistiques</span>
+                </a>
+            </li>
+            <li class="nav-item">
+                <a class="nav-link" href="#">
+                    <i class="fas fa-calendar-alt"></i>
+                    <span>Calendrier</span>
+                </a>
+            </li>
+            <li class="nav-item">
+                <a class="nav-link" href="#">
+                    <i class="fas fa-cog"></i>
+                    <span>Paramètres</span>
+                </a>
+            </li>
+        </ul>
+    </div>
+
+    <!-- Main Content -->
+    <div class="main-content">
+        <div class="dashboard-header">
+            <h1 class="dashboard-title">Tableau de Bord</h1>
+            <div>
+                <button class="btn btn-custom btn-edit" onclick="showEditForm()">
+                    <i class="fas fa-edit"></i> Modifier
+                </button>
+            </div>
+        </div>
+
+        <div class="row">
+            <!-- Informations générales -->
+            <div class="col-md-6 col-lg-3 mb-4">
+                <div class="dashboard-card">
+                    <div class="card-header">
+                        <h3 class="card-title">Nombre d'étudiants</h3>
+                    </div>
+                    <div class="d-flex align-items-center">
+                        <i class="fas fa-user-graduate fa-3x me-3" style="color: var(--mauve);"></i>
+                        <div>
+                            <h2 class="mb-0">1,250</h2>
+                            <p class="text-success mb-0"><i class="fas fa-arrow-up me-1"></i>5.3% depuis l'an dernier</p>
+                        </div>
+                    </div>
+                    <button class="btn btn-custom btn-view mt-3 w-100" onclick="showCharts('students')">
+                        <i class="fas fa-chart-pie"></i> Afficher les statistiques
+                    </button>
+                </div>
+            </div>
+            
+            <div class="col-md-6 col-lg-3 mb-4">
+                <div class="dashboard-card">
+                    <div class="card-header">
+                        <h3 class="card-title">Nombre d'enseignants</h3>
+                    </div>
+                    <div class="d-flex align-items-center">
+                        <i class="fas fa-chalkboard-teacher fa-3x me-3" style="color: var(--earth-green);"></i>
+                        <div>
+                            <h2 class="mb-0">87</h2>
+                            <p class="text-success mb-0"><i class="fas fa-arrow-up me-1"></i>2.1% depuis l'an dernier</p>
+                        </div>
+                    </div>
+                    <button class="btn btn-custom btn-view mt-3 w-100" onclick="showCharts('teachers')">
+                        <i class="fas fa-chart-bar"></i> Afficher les statistiques
+                    </button>
+                </div>
+            </div>
+            
+            <div class="col-md-6 col-lg-3 mb-4">
+                <div class="dashboard-card">
+                    <div class="card-header">
+                        <h3 class="card-title">Taux de réussite</h3>
+                    </div>
+                    <div class="d-flex align-items-center">
+                        <i class="fas fa-trophy fa-3x me-3" style="color: var(--earth-brown);"></i>
+                        <div>
+                            <h2 class="mb-0">92%</h2>
+                            <p class="text-success mb-0"><i class="fas fa-arrow-up me-1"></i>3.7% depuis l'an dernier</p>
+                        </div>
+                    </div>
+                    <button class="btn btn-custom btn-view mt-3 w-100" onclick="showCharts('success')">
+                        <i class="fas fa-chart-line"></i> Afficher les statistiques
+                    </button>
+                </div>
+            </div>
+            
+            <div class="col-md-6 col-lg-3 mb-4">
+                <div class="dashboard-card">
+                    <div class="card-header">
+                        <h3 class="card-title">Nombre de cours</h3>
+                    </div>
+                    <div class="d-flex align-items-center">
+                        <i class="fas fa-book fa-3x me-3" style="color: var(--mauve);"></i>
+                        <div>
+                            <h2 class="mb-0">142</h2>
+                            <p class="text-success mb-0"><i class="fas fa-arrow-up me-1"></i>8.4% depuis l'an dernier</p>
+                        </div>
+                    </div>
+                    <button class="btn btn-custom btn-view mt-3 w-100" onclick="showCharts('courses')">
+                        <i class="fas fa-chart-area"></i> Afficher les statistiques
+                    </button>
+                </div>
+            </div>
+        </div>
+
+        <!-- Graphiques -->
+        <div class="row" id="chartsSection" style="display: none;">
+            <div class="col-md-6 mb-4">
+                <div class="dashboard-card">
+                    <div class="card-header">
+                        <h3 class="card-title" id="chart1Title">Répartition des étudiants</h3>
+                    </div>
+                    <div class="chart-container">
+                        <!-- Placeholder pour le graphique camembert -->
+                        <div style="width: 100%; height: 100%; display: flex; align-items: center; justify-content: center; background-color: var(--light-nude); border-radius: 8px; position: relative; overflow: hidden;">
+                            <div style="width: 200px; height: 200px; border-radius: 50%; background: conic-gradient(var(--mauve) 0% 25%, var(--earth-green) 25% 55%, var(--earth-brown) 55% 70%, var(--nude) 70% 100%);"></div>
+                            <div style="position: absolute; width: 80px; height: 80px; border-radius: 50%; background-color: white; display: flex; align-items: center; justify-content: center;">
+                                <span style="font-weight: bold; color: var(--text-dark);">Données</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="col-md-6 mb-4">
+                <div class="dashboard-card">
+                    <div class="card-header">
+                        <h3 class="card-title" id="chart2Title">Évolution des inscriptions</h3>
+                    </div>
+                    <div class="chart-container">
+                        <!-- Placeholder pour le graphique en barres -->
+                        <div style="width: 100%; height: 100%; display: flex; align-items: flex-end; justify-content: space-around; background-color: var(--light-nude); border-radius: 8px; padding: 20px 10px 10px;">
+                            <div style="height: 60%; width: 40px; background-color: var(--mauve); border-radius: 6px 6px 0 0;"></div>
+                            <div style="height: 75%; width: 40px; background-color: var(--mauve); border-radius: 6px 6px 0 0;"></div>
+                            <div style="height: 90%; width: 40px; background-color: var(--mauve); border-radius: 6px 6px 0 0;"></div>
+                            <div style="height: 65%; width: 40px; background-color: var(--mauve); border-radius: 6px 6px 0 0;"></div>
+                            <div style="height: 80%; width: 40px; background-color: var(--mauve); border-radius: 6px 6px 0 0;"></div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="col-md-6 mb-4">
+                <div class="dashboard-card">
+                    <div class="card-header">
+                        <h3 class="card-title" id="chart3Title">Résultats par filière</h3>
+                    </div>
+                    <div class="chart-container">
+                        <!-- Placeholder pour l'histogramme -->
+                        <div style="width: 100%; height: 100%; display: flex; flex-direction: column; background-color: var(--light-nude); border-radius: 8px; padding: 15px; position: relative;">
+                            <div style="display: flex; height: 85%; align-items: flex-end;">
+                                <div style="flex: 1; margin: 0 5px; display: flex; flex-direction: column; align-items: center;">
+                                    <div style="background-color: var(--earth-brown); width: 100%; border-radius: 6px 6px 0 0; height: 65%;"></div>
+                                    <span style="font-size: 10px; margin-top: 5px;">A</span>
+                                </div>
+                                <div style="flex: 1; margin: 0 5px; display: flex; flex-direction: column; align-items: center;">
+                                    <div style="background-color: var(--earth-brown); width: 100%; border-radius: 6px 6px 0 0; height: 80%;"></div>
+                                    <span style="font-size: 10px; margin-top: 5px;">B</span>
+                                </div>
+                                <div style="flex: 1; margin: 0 5px; display: flex; flex-direction: column; align-items: center;">
+                                    <div style="background-color: var(--earth-brown); width: 100%; border-radius: 6px 6px 0 0; height: 55%;"></div>
+                                    <span style="font-size: 10px; margin-top: 5px;">C</span>
+                                </div>
+                                <div style="flex: 1; margin: 0 5px; display: flex; flex-direction: column; align-items: center;">
+                                    <div style="background-color: var(--earth-brown); width: 100%; border-radius: 6px 6px 0 0; height: 90%;"></div>
+                                    <span style="font-size: 10px; margin-top: 5px;">D</span>
+                                </div>
+                                <div style="flex: 1; margin: 0 5px; display: flex; flex-direction: column; align-items: center;">
+                                    <div style="background-color: var(--earth-brown); width: 100%; border-radius: 6px 6px 0 0; height: 70%;"></div>
+                                    <span style="font-size: 10px; margin-top: 5px;">E</span>
+                                </div>
+                            </div>
+                            <!-- Axe Y -->
+                            <div style="position: absolute; top: 15px; left: 5px; bottom: 25px; width: 1px; background-color: #ccc;"></div>
+                            <!-- Axe X -->
+                            <div style="position: absolute; bottom: 25px; left: 5px; right: 15px; height: 1px; background-color: #ccc;"></div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="col-md-6 mb-4">
+                <div class="dashboard-card">
+                    <div class="card-header">
+                        <h3 class="card-title" id="chart4Title">Compétences acquises</h3>
+                    </div>
+                    <div class="chart-container">
+                        <!-- Placeholder pour le graphique radar -->
+                        <div style="width: 100%; height: 100%; display: flex; align-items: center; justify-content: center; background-color: var(--light-nude); border-radius: 8px; position: relative;">
+                            <!-- Cercles concentriques -->
+                            <div style="width: 200px; height: 200px; border-radius: 50%; border: 1px solid #ccc; position: absolute;"></div>
+                            <div style="width: 150px; height: 150px; border-radius: 50%; border: 1px solid #ccc; position: absolute;"></div>
+                            <div style="width: 100px; height: 100px; border-radius: 50%; border: 1px solid #ccc; position: absolute;"></div>
+                            <div style="width: 50px; height: 50px; border-radius: 50%; border: 1px solid #ccc; position: absolute;"></div>
+                            
+                            <!-- Polygon radar -->
+                            <div style="position: relative; width: 200px; height: 200px;">
+                                <svg width="200" height="200" viewBox="-100 -100 200 200">
+                                    <polygon points="0,-80 76,-25 47,65 -47,65 -76,-25" fill="rgba(156, 138, 165, 0.5)" stroke="var(--mauve)" stroke-width="2" />
+                                    <line x1="0" y1="0" x2="0" y2="-90" stroke="#ccc" stroke-width="1" />
+                                    <line x1="0" y1="0" x2="85" y2="-30" stroke="#ccc" stroke-width="1" />
+                                    <line x1="0" y1="0" x2="53" y2="73" stroke="#ccc" stroke-width="1" />
+                                    <line x1="0" y1="0" x2="-53" y2="73" stroke="#ccc" stroke-width="1" />
+                                    <line x1="0" y1="0" x2="-85" y2="-30" stroke="#ccc" stroke-width="1" />
+                                    
+                                    <text x="0" y="-95" text-anchor="middle" font-size="10">A</text>
+                                    <text x="90" y="-30" text-anchor="middle" font-size="10">B</text>
+                                    <text x="58" y="80" text-anchor="middle" font-size="10">C</text>
+                                    <text x="-58" y="80" text-anchor="middle" font-size="10">D</text>
+                                    <text x="-90" y="-30" text-anchor="middle" font-size="10">E</text>
+                                </svg>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Edit Form Modal -->
+    <div class="edit-form-overlay" id="editFormOverlay">
+        <div class="edit-form">
+            <h2 class="form-title">Modifier les informations</h2>
+            <form id="infoUpdateForm">
+                <div class="mb-3">
+                    <label for="studentCount" class="form-label">Nombre d'étudiants</label>
+                    <input type="number" class="form-control" id="studentCount" value="1250">
+                </div>
+                <div class="mb-3">
+                    <label for="teacherCount" class="form-label">Nombre d'enseignants</label>
+                    <input type="number" class="form-control" id="teacherCount" value="87">
+                </div>
+                <div class="mb-3">
+                    <label for="successRate" class="form-label">Taux de réussite (%)</label>
+                    <input type="number" class="form-control" id="successRate" value="92">
+                </div>
+                <div class="mb-3">
+                    <label for="courseCount" class="form-label">Nombre de cours</label>
+                    <input type="number" class="form-control" id="courseCount" value="142">
+                </div>
+                <div class="form-actions">
+                    <button type="button" class="btn btn-secondary" onclick="hideEditForm()">Annuler</button>
+                    <button type="button" class="btn btn-custom btn-edit" onclick="saveChanges()">Enregistrer</button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <!-- Scripts -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap/5.3.0/js/bootstrap.bundle.min.js"></script>
+    <script>
+        // Fonctions pour le formulaire d'édition
+        function showEditForm() {
+            document.getElementById('editFormOverlay').style.display = 'flex';
+        }
+        
+        function hideEditForm() {
+            document.getElementById('editFormOverlay').style.display = 'none';
+        }
+        
+        function saveChanges() {
+            // Logique pour sauvegarder les modifications
+            // Dans une implémentation Django, cela serait géré par une vue
+            alert('Modifications enregistrées avec succès!');
+            hideEditForm();
+        }
+        
+        // Fonction pour afficher les graphiques
+        function showCharts(category) {
+            const chartsSection = document.getElementById('chartsSection');
+            chartsSection.style.display = 'flex';
+            chartsSection.style.flexWrap = 'wrap';
+            
+            // Ajustement des titres en fonction de la catégorie
+            switch(category) {
+                case 'students':
+                    document.getElementById('chart1Title').textContent = 'Répartition des étudiants par filière';
+                    document.getElementById('chart2Title').textContent = 'Évolution des inscriptions';
+                    document.getElementById('chart3Title').textContent = 'Répartition par genre et âge';
+                    document.getElementById('chart4Title').textContent = 'Compétences des étudiants';
+                    break;
+                case 'teachers':
+                    document.getElementById('chart1Title').textContent = 'Répartition des enseignants par département';
+                    document.getElementById('chart2Title').textContent = 'Ancienneté des enseignants';
+                    document.getElementById('chart3Title').textContent = 'Charge d\'enseignement';
+                    document.getElementById('chart4Title').textContent = 'Spécialités des enseignants';
+                    break;
+                case 'success':
+                    document.getElementById('chart1Title').textContent = 'Taux de réussite par filière';
+                    document.getElementById('chart2Title').textContent = 'Évolution du taux de réussite';
+                    document.getElementById('chart3Title').textContent = 'Répartition des mentions';
+                    document.getElementById('chart4Title').textContent = 'Facteurs de réussite';
+                    break;
+                case 'courses':
+                    document.getElementById('chart1Title').textContent = 'Répartition des cours par niveau';
+                    document.getElementById('chart2Title').textContent = 'Heures d\'enseignement par mois';
+                    document.getElementById('chart3Title').textContent = 'Types de cours proposés';
+                    document.getElementById('chart4Title').textContent = 'Évaluation des cours';
+                    break;
+            }
+            
+            // Faire défiler jusqu'aux graphiques
+            chartsSection.scrollIntoView({ behavior: 'smooth' });
+        }
+    </script>
+</body>
+</html>

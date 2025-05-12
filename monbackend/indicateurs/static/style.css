@@ -1,0 +1,169 @@
+
+        :root {
+            --nude: #e6d2c7;
+            --mauve: #9b85a7;
+            --light-mauve: #d4c6d9;
+            --earth-tone: #a88c76;
+            --light-earth: #e8dfd5;
+            --dark-text: #4d4d4d;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background-color: #f9f5f2;
+            color: var(--dark-text);
+        }
+
+        /* Navbar */
+        .navbar {
+            background-color: white;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.05);
+        }
+
+        .navbar-brand img {
+            height: 40px;
+            margin-right: 10px;
+        }
+
+        /* Sidebar */
+        .sidebar {
+            background-color: white;
+            min-height: calc(100vh - 56px);
+            box-shadow: 2px 0 10px rgba(0, 0, 0, 0.05);
+            padding-top: 20px;
+        }
+
+        .nav-link {
+            color: var(--dark-text);
+            border-radius: 0;
+            padding: 12px 20px;
+            margin: 5px 0;
+            transition: all 0.3s;
+        }
+
+        .nav-link.active {
+            background-color: var(--light-mauve);
+            color: var(--dark-text);
+            border-left: 4px solid var(--mauve);
+        }
+
+        .nav-link:hover {
+            background-color: var(--light-earth);
+        }
+
+        .nav-link i {
+            margin-right: 10px;
+            width: 20px;
+            text-align: center;
+        }
+
+        /* Content area */
+        .content-area {
+            padding: 30px;
+            background-color: #f9f5f2;
+        }
+
+        .dashboard-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 30px;
+        }
+
+        .dashboard-title {
+            color: var(--mauve);
+            font-weight: 600;
+        }
+
+        .action-buttons {
+            display: flex;
+            gap: 15px;
+            margin-bottom: 30px;
+        }
+
+        .btn-modify {
+            background-color: var(--mauve);
+            color: white;
+            border: none;
+            padding: 8px 20px;
+            border-radius: 5px;
+            transition: all 0.3s;
+        }
+
+        .btn-modify:hover {
+            background-color: #8a7495;
+        }
+
+        .btn-view {
+            background-color: var(--earth-tone);
+            color: white;
+            border: none;
+            padding: 8px 20px;
+            border-radius: 5px;
+            transition: all 0.3s;
+        }
+
+        .btn-view:hover {
+            background-color: #977c68;
+        }
+
+        /* Form Styles */
+        .edit-form {
+            background-color: white;
+            padding: 25px;
+            border-radius: 8px;
+            box-shadow: 0 2px 15px rgba(0, 0, 0, 0.08);
+            margin-bottom: 30px;
+        }
+
+        .form-control {
+            border: 1px solid #e0e0e0;
+            padding: 10px 15px;
+            border-radius: 5px;
+        }
+
+        .form-label {
+            color: var(--dark-text);
+            font-weight: 500;
+        }
+
+        /* Dashboard Cards */
+        .stat-card {
+            background-color: white;
+            border-radius: 8px;
+            padding: 20px;
+            margin-bottom: 20px;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.05);
+            transition: transform 0.3s;
+        }
+
+        .stat-card:hover {
+            transform: translateY(-5px);
+        }
+
+        .stat-card-header {
+            color: var(--mauve);
+            font-weight: 600;
+            margin-bottom: 15px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .stat-card-icon {
+            width: 40px;
+            height: 40px;
+            background-color: var(--light-mauve);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: var(--mauve);
+        }
+
+        /* Chart containers */
+        .chart-container {
+            height: 300px;
+            margin-bottom: 20px;
+        }
+    
