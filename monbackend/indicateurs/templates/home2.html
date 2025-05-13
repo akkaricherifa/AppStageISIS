@@ -17,6 +17,7 @@
             --earth-green: #879e80;
             --text-dark: #333333;
             --sidebar-width: 240px;
+           --color-sidebar: #eae4de;
         }
         
         body {
@@ -60,16 +61,19 @@
         
         /* Sidebar styles */
         .sidebar {
-            position: fixed;
-            top: 60px;
-            left: 0;
-            width: var(--sidebar-width);
+            width: 250px;
+            background-color: var(--color-sidebar);
             height: calc(100vh - 60px);
-            background-color: white;
-            box-shadow: 2px 0 10px rgba(0, 0, 0, 0.1);
-            padding-top: 20px;
-            transition: all 0.3s;
-            z-index: 900;
+            position: fixed;
+            padding: 2rem 1rem;
+            display: flex;
+            flex-direction: column;
+            gap: 0.5rem;
+            transition: transform 0.3s ease, width 0.3s ease;
+            z-index: 100;
+            left: 0;
+            top: 60px;
+
         }
         
         .nav-item {
@@ -270,8 +274,39 @@
                 margin-right: 0;
             }
         }
+
+         .sidebar.collapsed {
+                  transform: translateX(-80px);
+             }
+            .sidebar-toggle {
+                  right: 20px;
+             }
+
+
+             .toggle-btn {
+ 
+              color: #333; /* gris foncé */
+                   border: none;
+               border-radius: 50%;
+                 width: 2px;
+                height: 2px;
+                font-size: 1.3rem;
+                  margin-top: -40px;
+               cursor: pointer;
+               margin-top: -10px;
+               display: flex;
+               align-items: center;
+                justify-content: center;
+                box-shadow: 0 2px 6px rgba(0, 0, 0, 0.1); /* ombre douce */
+                transition: background 0.3s ease, transform 0.3s ease;
+             }
+
+               .toggle-btn:hover {
+                background-color:rgb(218, 202, 188); /* un peu plus foncé au survol */
+                }
+
         
-        @media (max-width: 576px) {
+         @media (max-width: 576px) {
             .dashboard-header {
                 flex-direction: column;
                 align-items: flex-start;
@@ -354,7 +389,13 @@
         </div>
     </nav>
 
+
     <!-- Sidebar -->
+               <div class="sidebar-toggle">
+  <button id="sidebarToggle" class="toggle-btn" aria-label="Toggle sidebar">
+    <span id="toggleIcon">☰</span>
+  </button>
+</div>
     <div class="sidebar">
         <ul class="nav flex-column">
             <li class="nav-item">
@@ -363,6 +404,7 @@
                     <span>Accueil</span>
                 </a>
             </li>
+   
             <li class="nav-item">
                 <a class="nav-link" href="#">
                     <i class="fas fa-user-graduate"></i>
@@ -690,3 +732,44 @@
     </script>
 </body>
 </html>
+
+<script>
+  const toggleBtn = document.getElementById("sidebarToggle");
+  const sidebar = document.getElementById("sidebar");
+  const container = document.getElementById("container");
+  const toggleIcon = document.getElementById("toggleIcon");
+
+  toggleBtn.addEventListener("click", () => {
+    sidebar.classList.toggle("collapsed");
+    container.classList.toggle("sidebar-collapsed");
+
+    // Changement de l'icône
+    if (toggleIcon.textContent === "☰") {
+      toggleIcon.textContent = "➤"; // ou une autre flèche comme « ◀ » ou « ← »
+    } else {
+      toggleIcon.textContent = "☰";
+    }
+  });
+</script>
+
+
+            </body>
+            </html>                
+<script>
+document.addEventListener('DOMContentLoaded', function () {
+  const sidebar = document.getElementById('sidebar');
+  const toggleBtn = document.getElementById('sidebarToggle');
+  const toggleIcon = document.getElementById('toggleIcon');
+
+  toggleBtn.addEventListener('click', function () {
+    sidebar.classList.toggle('collapsed');
+
+    // Change l’icône dynamiquement
+    if (sidebar.classList.contains('collapsed')) {
+      toggleIcon.textContent = '☰'; // menu
+    } else {
+      toggleIcon.textContent = '⮜'; // flèche gauche
+    }
+  });
+
+</script>
