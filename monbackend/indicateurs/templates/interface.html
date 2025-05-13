@@ -166,10 +166,10 @@
   color: #333; /* gris foncé */
   border: none;
   border-radius: 50%;
-  width: 25px;
-  height: 25px;
+  width: 2px;
+  height: 2px;
   font-size: 1.3rem;
-  margin-top: -10px;
+  margin-top: -40px;
   cursor: pointer;
   margin-top: -10px;
   display: flex;
@@ -222,10 +222,12 @@
 
         /* Main Content Styles */
         .main-content {
-            flex: 1;
-            margin-left: 250px;
-            padding: 2rem;
-        }
+    flex: 1;
+    margin-left: 250px;
+    padding: 2rem;
+    transition: margin-left 0.3s ease, width 0.3s ease;
+}
+
 
         .dashboard-title {
             font-size: 1.75rem;
@@ -333,10 +335,12 @@
               transform: translateY(-15px);
               box-shadow: 0 6px 12px rgba(0, 0, 0, 0.15);
             }
-   .container.sidebar-collapsed .main-content {
+ .container.sidebar-collapsed .main-content {
     margin-left: 0;
     width: 100%;
+    transition: margin-left 0.3s ease, width 0.3s ease;
 }
+
 
     </style>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
@@ -502,6 +506,26 @@
                     </div>
                    <i class="fas fa-chart-line card-icon"></i>
                 </div>
+<script>
+  const toggleBtn = document.getElementById("sidebarToggle");
+  const sidebar = document.getElementById("sidebar");
+  const container = document.getElementById("container");
+  const toggleIcon = document.getElementById("toggleIcon");
+
+  toggleBtn.addEventListener("click", () => {
+    sidebar.classList.toggle("collapsed");
+    container.classList.toggle("sidebar-collapsed");
+
+    // Changement de l'icône
+    if (toggleIcon.textContent === "☰") {
+      toggleIcon.textContent = "➤"; // ou une autre flèche comme « ◀ » ou « ← »
+    } else {
+      toggleIcon.textContent = "☰";
+    }
+  });
+</script>
+
+
             </body>
             </html>                
 <script>
@@ -520,7 +544,8 @@ document.addEventListener('DOMContentLoaded', function () {
       toggleIcon.textContent = '⮜'; // flèche gauche
     }
   });
-});
+
 </script>
+
 
 
