@@ -137,7 +137,12 @@
             margin-top: 70px;
             min-height: calc(100vh - 70px);
         }
-
+.sidebar-toggle {
+  position: fixed;
+  top: 90px; /* juste sous la navbar */
+  left: 220px;
+  z-index: 200;
+}
         .sidebar {
             width: 250px;
             background-color: var(--color-sidebar);
@@ -147,7 +152,45 @@
             display: flex;
             flex-direction: column;
             gap: 0.5rem;
+            transition: transform 0.3s ease, width 0.3s ease;
+            z-index: 100;
+            left: 0;
+            top: 70px;
+
         }
+
+
+
+       .toggle-btn {
+ 
+  color: #333; /* gris foncé */
+  border: none;
+  border-radius: 50%;
+  width: 25px;
+  height: 25px;
+  font-size: 1.3rem;
+  margin-top: -10px;
+  cursor: pointer;
+  margin-top: -10px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.1); /* ombre douce */
+  transition: background 0.3s ease, transform 0.3s ease;
+}
+
+.toggle-btn:hover {
+  background-color:rgb(218, 202, 188); /* un peu plus foncé au survol */
+}
+
+  
+
+         .sidebar.collapsed {
+           transform: translateX(-100%);
+           }
+
+
+
 
         .nav-item {
             display: flex;
@@ -159,6 +202,7 @@
             transition: var(--transition);
             color: var(--color-text);
             text-decoration: none;
+            margin-top: 10px;
         }
 
         .nav-item:hover, .nav-item.active {
@@ -257,9 +301,17 @@
             .sidebar {
                 width: 80px;
             }
+
+            .sidebar.collapsed {
+                  transform: translateX(-80px);
+             }
+            .sidebar-toggle {
+                  right: 20px;
+             }
             
             .nav-text {
                 display: none;
+             
             }
             
             .main-content {
@@ -281,6 +333,11 @@
               transform: translateY(-15px);
               box-shadow: 0 6px 12px rgba(0, 0, 0, 0.15);
             }
+   .container.sidebar-collapsed .main-content {
+    margin-left: 0;
+    width: 100%;
+}
+
     </style>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
 </head>
@@ -302,15 +359,24 @@
             </button>
         </div>
     </nav>
+   <div class="sidebar-toggle">
+  <button id="sidebarToggle" class="toggle-btn" aria-label="Toggle sidebar">
+    <span id="toggleIcon">☰</span>
+  </button>
+</div>
 
     <!-- Container for sidebar and main content -->
-    <div class="container">
+     
+    <div class="container" id="container">
         <!-- Sidebar -->
-        <aside class="sidebar">
+        
+        <aside class="sidebar" id="sidebar">
+           
             <a href="#" class="nav-item active">
                 <i class="fas fa-home nav-icon"></i>
-                <span class="nav-text">Tableau de bord</span>
+                <span class="nav-text" >Tableau de bord</span>
             </a>
+           
             <a href="#" class="nav-item">
                 <i class="fas fa-user-graduate nav-icon"></i>
                 <span class="nav-text">Étudiants</span>
@@ -438,3 +504,23 @@
                 </div>
             </body>
             </html>                
+<script>
+document.addEventListener('DOMContentLoaded', function () {
+  const sidebar = document.getElementById('sidebar');
+  const toggleBtn = document.getElementById('sidebarToggle');
+  const toggleIcon = document.getElementById('toggleIcon');
+
+  toggleBtn.addEventListener('click', function () {
+    sidebar.classList.toggle('collapsed');
+
+    // Change l’icône dynamiquement
+    if (sidebar.classList.contains('collapsed')) {
+      toggleIcon.textContent = '☰'; // menu
+    } else {
+      toggleIcon.textContent = '⮜'; // flèche gauche
+    }
+  });
+});
+</script>
+
+
