@@ -7,350 +7,383 @@
     <title>Tableau de Bord - Institut</title>
     <link href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap/5.3.0/css/bootstrap.min.css" rel="stylesheet">
     <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet">
-    <style>
-        :root {
-            --nude: #e6d2c6;
-            --light-nude: #f5efe9;
-            --mauve: #9c8aa5;
-            --light-mauve: #d1c5d7;
-            --earth-brown: #785e4d;
-            --earth-green: #879e80;
-            --text-dark: #333333;
-            --sidebar-width: 240px;
-           --color-sidebar: #eae4de;
-        }
-        
-        body {
-            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-            background-color: var(--light-nude);
-            color: var(--text-dark);
-            margin: 0;
-            padding: 0;
-            min-height: 100vh;
-        }
-        
-        /* Navbar styles */
-        .navbar {
-            background-color: white;
-            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
-            height: 60px;
-            padding: 0 20px;
-            position: fixed;
-            width: 100%;
-            top: 0;
-            z-index: 1000;
-        }
-        
-        .navbar-brand {
-            display: flex;
-            align-items: center;
-        }
-        
-        .navbar-brand img {
-            height: 70px;
-            width: auto;
-            transition: all 0.3s ease;
-            transform: scale(1.05);
-        }
-        
-        .navbar-title {
-            font-size: 1.2rem;
-            font-weight: 600;
-            color: var(--earth-brown);
-        }
-        
-        /* Sidebar styles */
-        .sidebar {
-            width: 250px;
-            background-color: var(--color-sidebar);
-            height: calc(100vh - 60px);
-            position: fixed;
-            padding: 2rem 1rem;
-            display: flex;
-            flex-direction: column;
-            gap: 0.5rem;
-            transition: transform 0.3s ease, width 0.3s ease;
-            z-index: 100;
-            left: 0;
-            top: 60px;
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/3.9.1/chart.min.js"></script>
 
+<style>
+    :root {
+        --coral: #ed6a79;
+        --light-coral: #f8d6da;
+        --purple: #8a63d2;
+        --light-purple: #d2c2f0;
+        --deep-purple: #6741c0;
+        --medium-purple: #9c78dd;
+        --text-dark: #333333;
+        --sidebar-width: 240px;
+        --color-sidebar: #f0e8f5;
+    }
+    .dark-mode .dashboard-card {
+        background-color: #332b47;
+        border-left: 4px solid var(--purple);
+    }
+    body {
+        font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        background-color: white;
+        color: var(--text-dark);
+        margin: 0;
+        padding: 0;
+        min-height: 100vh;
+    }
+    
+    /* Navbar styles */
+    .navbar {
+        background-color: white;
+        box-shadow: 0 2px 10px rgba(138, 99, 210, 0.15);
+        height: 60px;
+        padding: 0 20px;
+        position: fixed;
+        width: 100%;
+        top: 0;
+        z-index: 1000;
+    }
+    
+    .navbar-brand {
+        display: flex;
+        align-items: center;
+    }
+    
+    .navbar-brand img {
+        height: 70px;
+        width: auto;
+        transition: all 0.3s ease;
+        transform: scale(1.05);
+    }
+    
+    .navbar-title {
+        font-size: 1.2rem;
+        font-weight: 600;
+        color: var(--deep-purple);
+    }
+    
+    /* Sidebar styles */
+    .sidebar {
+        width: 250px;
+        background-color: var(--color-sidebar);
+        height: calc(100vh - 60px);
+        position: fixed;
+        padding: 2rem 1rem;
+        display: flex;
+        flex-direction: column;
+        gap: 0.5rem;
+        transition: transform 0.3s ease, width 0.3s ease;
+        z-index: 100;
+        left: 0;
+        top: 60px;
+    }
+    
+    .nav-item {
+        margin-bottom: 5px;
+        border-radius: 0 20px 20px 0;
+        overflow: hidden;
+        position: relative;
+    }
+    
+    .nav-link {
+        color: var(--text-dark);
+        padding: 12px 20px;
+        display: flex;
+        align-items: center;
+        transition: all 0.3s;
+        font-weight: 500;
+    }
+    
+    .nav-link i {
+        margin-right: 10px;
+        font-size: 1.1rem;
+        width: 24px;
+        text-align: center;
+    }
+    
+    .nav-link:hover, .nav-link.active {
+        background-color: var(--light-purple);
+        color: var(--deep-purple);
+    }
+    
+    .nav-link.active::before {
+        content: '';
+        position: absolute;
+        left: 0;
+        top: 0;
+        height: 100%;
+        width: 4px;
+        background-color: var(--purple);
+    }
+    
+    /* Main content styles */
+    .main-content {
+        margin-left: var(--sidebar-width);
+        margin-top: 60px;
+        padding: 20px;
+        min-height: calc(100vh - 60px);
+        background-color: white;
+    }
+    
+    .dashboard-header {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        margin-bottom: 20px;
+        padding-bottom: 15px;
+        border-bottom: 1px solid var(--light-coral);
+    }
+    
+    .dashboard-title {
+        font-size: 1.8rem;
+        font-weight: 600;
+        color: var(--deep-purple);
+    }
+    
+    /* Card styles */
+    .dashboard-card {
+        background-color: #faf7ff;
+        border-left: 4px solid var(--purple);
+        border-radius: 12px;
+        box-shadow: 0 4px 12px rgba(138, 99, 210, 0.08);
+        padding: 20px;
+        margin-bottom: 20px;
+        transition: transform 0.3s, box-shadow 0.3s;
+    }
+    
+    .dashboard-card:hover {
+        transform: translateY(-5px);
+        box-shadow: 0 8px 16px rgba(138, 99, 210, 0.15);
+        background-color: #f5f0ff;
+    }
+    
+    .card-header {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        margin-bottom: 15px;
+    }
+    
+    .card-title {
+        font-size: 1.2rem;
+        font-weight: 600;
+        color: var(--deep-purple);
+    }
+    
+    /* Button styles */
+    .btn-custom {
+        background-color: var(--purple);
+        color: white;
+        border: none;
+        padding: 8px 16px;
+        border-radius: 6px;
+        font-weight: 500;
+        transition: all 0.3s;
+        display: inline-flex;
+        align-items: center;
+    }
+    
+    .btn-custom i {
+        margin-right: 8px;
+    }
+    
+    .btn-custom:hover {
+        background-color: var(--deep-purple);
+        transform: translateY(-2px);
+        box-shadow: 0 4px 8px rgba(138, 99, 210, 0.25);
+        color: white;
+    }
+    
+    .btn-edit {
+        background-color: var(--coral);
+    }
+    
+    .btn-view {
+        background-color: var(--purple);
+    }
+    
+    /* Form modal styles */
+    .edit-form-overlay {
+        display: none;
+        position: fixed;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        background-color: rgba(0, 0, 0, 0.5);
+        z-index: 1100;
+        align-items: center;
+        justify-content: center;
+    }
+    
+    .edit-form {
+        background-color: white;
+        border-radius: 12px;
+        box-shadow: 0 10px 30px rgba(138, 99, 210, 0.25);
+        padding: 25px;
+        width: 90%;
+        max-width: 500px;
+    }
+    
+    .form-title {
+        font-size: 1.4rem;
+        font-weight: 600;
+        color: var(--deep-purple);
+        margin-bottom: 20px;
+        padding-bottom: 10px;
+        border-bottom: 2px solid var(--light-purple);
+    }
+    
+    .form-control {
+        border: 1px solid var(--light-purple);
+        border-radius: 6px;
+        padding: 10px 15px;
+        margin-bottom: 15px;
+        transition: all 0.3s;
+    }
+    
+    .form-control:focus {
+        border-color: var(--purple);
+        box-shadow: 0 0 0 0.2rem rgba(138, 99, 210, 0.25);
+    }
+    
+    .form-actions {
+        display: flex;
+        justify-content: flex-end;
+        gap: 10px;
+        margin-top: 20px;
+    }
+    
+    /* Chart containers */
+    .chart-container {
+        height: 300px;
+        margin-bottom: 20px;
+    }
+
+    /* Responsive adjustments */
+    @media (max-width: 992px) {
+        .sidebar {
+            width: 60px;
+            transform: translateX(0);
         }
         
-        .nav-item {
-            margin-bottom: 5px;
-            border-radius: 0 20px 20px 0;
-            overflow: hidden;
-            position: relative;
+        .sidebar .nav-link span {
+            display: none;
         }
         
-        .nav-link {
-            color: var(--text-dark);
-            padding: 12px 20px;
-            display: flex;
-            align-items: center;
-            transition: all 0.3s;
-            font-weight: 500;
+        .main-content {
+            margin-left: 60px;
         }
         
         .nav-link i {
-            margin-right: 10px;
-            font-size: 1.1rem;
-            width: 24px;
-            text-align: center;
+            margin-right: 0;
         }
-        
-        .nav-link:hover, .nav-link.active {
-            background-color: var(--light-mauve);
-            color: var(--earth-brown);
-        }
-        
-        .nav-link.active::before {
-            content: '';
-            position: absolute;
-            left: 0;
-            top: 0;
-            height: 100%;
-            width: 4px;
-            background-color: var(--mauve);
-        }
-        
-        /* Main content styles */
-        .main-content {
-            margin-left: var(--sidebar-width);
-            margin-top: 60px;
-            padding: 20px;
-            min-height: calc(100vh - 60px);
-        }
-        
-        .dashboard-header {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            margin-bottom: 20px;
-            padding-bottom: 15px;
-            border-bottom: 1px solid var(--nude);
-        }
-        
-        .dashboard-title {
-            font-size: 1.8rem;
-            font-weight: 600;
-            color: var(--earth-brown);
-        }
-        
-        /* Card styles */
-        .dashboard-card {
-            background-color: white;
-            border-radius: 12px;
-            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05);
-            padding: 20px;
-            margin-bottom: 20px;
-            transition: transform 0.3s, box-shadow 0.3s;
-        }
-        
-        .dashboard-card:hover {
-            transform: translateY(-5px);
-            box-shadow: 0 8px 16px rgba(0, 0, 0, 0.1);
-        }
-        
-        .card-header {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            margin-bottom: 15px;
-        }
-        
-        .card-title {
-            font-size: 1.2rem;
-            font-weight: 600;
-            color: var(--earth-brown);
-        }
-        
-        /* Button styles */
-        .btn-custom {
-            background-color: var(--mauve);
-            color: white;
-            border: none;
-            padding: 8px 16px;
-            border-radius: 6px;
-            font-weight: 500;
-            transition: all 0.3s;
-            display: inline-flex;
-            align-items: center;
-        }
-        
-        .btn-custom i {
-            margin-right: 8px;
-        }
-        
-        .btn-custom:hover {
-            background-color: var(--earth-brown);
-            transform: translateY(-2px);
-            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.15);
-            color: white;
-        }
-        
-        .btn-edit {
-            background-color: var(--earth-green);
-        }
-        
-        .btn-view {
-            background-color: var(--mauve);
-        }
-        
-        /* Form modal styles */
-        .edit-form-overlay {
-            display: none;
-            position: fixed;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            background-color: rgba(0, 0, 0, 0.5);
-            z-index: 1100;
-            align-items: center;
-            justify-content: center;
-        }
-        
-        .edit-form {
-            background-color: white;
-            border-radius: 12px;
-            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.2);
-            padding: 25px;
-            width: 90%;
-            max-width: 500px;
-        }
-        
-        .form-title {
-            font-size: 1.4rem;
-            font-weight: 600;
-            color: var(--earth-brown);
-            margin-bottom: 20px;
-            padding-bottom: 10px;
-            border-bottom: 2px solid var(--light-mauve);
-        }
-        
-        .form-control {
-            border: 1px solid var(--light-mauve);
-            border-radius: 6px;
-            padding: 10px 15px;
-            margin-bottom: 15px;
-            transition: all 0.3s;
-        }
-        
-        .form-control:focus {
-            border-color: var(--mauve);
-            box-shadow: 0 0 0 0.2rem rgba(156, 138, 165, 0.25);
-        }
-        
-        .form-actions {
-            display: flex;
-            justify-content: flex-end;
-            gap: 10px;
-            margin-top: 20px;
-        }
-        
-        /* Chart containers */
-        .chart-container {
-            height: 300px;
-            margin-bottom: 20px;
-        }
+    }
 
-        /* Responsive adjustments */
-        @media (max-width: 992px) {
-            .sidebar {
-                width: 60px;
-                transform: translateX(0);
-            }
-            
-            .sidebar .nav-link span {
-                display: none;
-            }
-            
-            .main-content {
-                margin-left: 60px;
-            }
-            
-            .nav-link i {
-                margin-right: 0;
-            }
-        }
-
-         .sidebar.collapsed {
-                  transform: translateX(-80px);
-             }
-            .sidebar-toggle {
-                  right: 20px;
-             }
-
-
-             .toggle-btn {
- 
-              color: #333; /* gris foncé */
-                   border: none;
-               border-radius: 50%;
-                 width: 2px;
-                height: 2px;
-                font-size: 1.3rem;
-                  margin-top: -40px;
-               cursor: pointer;
-               margin-top: -10px;
-               display: flex;
-               align-items: center;
-                justify-content: center;
-                box-shadow: 0 2px 6px rgba(0, 0, 0, 0.1); /* ombre douce */
-                transition: background 0.3s ease, transform 0.3s ease;
-             }
-
-               .toggle-btn:hover {
-                background-color:rgb(218, 202, 188); /* un peu plus foncé au survol */
-                }
-
-        
-         @media (max-width: 576px) {
-            .dashboard-header {
-                flex-direction: column;
-                align-items: flex-start;
-            }
-            
-            .chart-container {
-                height: 250px;
-            }
-        }
-
-        .dark-mode {
-          --nude: #2e2e2e;
-        --mauve: #b9a7c4;
-         --light-mauve: #4b3f56;
-          --earth-tone: #78614f;
-          --light-earth: #5c4a3a;
-        --dark-text: #e0e0e0;
-          background-color: #1f1f1f;
-          color: var(--dark-text);
-          }
-
-         .dark-mode .navbar,
-         .dark-mode .sidebar,
-         .dark-mode .edit-form,
-         .dark-mode .stat-card {
-         background-color: #2b2b2b;
-         box-shadow: 0 2px 10px rgba(255, 255, 255, 0.05);
-        }
-
-         .dark-mode .nav-link {
-        color: var(--dark-text);
-        }
-
-          .dark-mode .nav-link.active {
-        background-color: var(--light-mauve);
-        color: var(--dark-text);
-         border-left: 4px solid var(--mauve);
+     .sidebar.collapsed {
+              transform: translateX(-80px);
+         }
+        .sidebar-toggle {
+              right: 20px;
          }
 
-        .dark-mode .nav-link:hover {
-         background-color: var(--light-earth);
-        }
 
-    </style>
+         .toggle-btn {
+          color: #333;
+          border: none;
+          border-radius: 50%;
+          width: 2px;
+          height: 2px;
+          font-size: 1.3rem;
+          margin-top: -40px;
+          cursor: pointer;
+          margin-top: -10px;
+          display: flex;
+          align-items: center;
+          justify-content: center;
+          box-shadow: 0 2px 6px rgba(138, 99, 210, 0.15);
+          transition: background 0.3s ease, transform 0.3s ease;
+         }
+
+         .toggle-btn:hover {
+            background-color: var(--light-purple);
+         }
+
+    
+     @media (max-width: 576px) {
+        .dashboard-header {
+            flex-direction: column;
+            align-items: flex-start;
+        }
+        
+        .chart-container {
+            height: 250px;
+        }
+    }
+
+    .dark-mode {
+      --coral: #ff7b8a;
+      --purple: #a485e0;
+      --light-purple: #473063;
+      --deep-purple: #8a63d2;
+      --dark-text: #e0e0e0;
+      background-color: #1f1f1f;
+      color: var(--dark-text);
+    }
+
+     .dark-mode .navbar,
+     .dark-mode .sidebar,
+     .dark-mode .edit-form,
+     .dark-mode .stat-card {
+       background-color: #2b2b2b;
+       box-shadow: 0 2px 10px rgba(138, 99, 210, 0.15);
+    }
+
+     .dark-mode .nav-link {
+       color: var(--dark-text);
+    }
+
+     .dark-mode .nav-link.active {
+       background-color: var(--light-purple);
+       color: var(--dark-text);
+       border-left: 4px solid var(--purple);
+    }
+
+    .dark-mode .nav-link:hover {
+       background-color: #3d2a5a;
+    }
+
+    .notification-icon {
+       font-size: 1.2rem;
+       margin-right: 2px;
+       margin-left: 15px;
+       margin-top: 3px;
+       color: var(--purple);
+       cursor: pointer;
+       transition: transform 0.2s ease;
+    }
+
+     .notification-icon:hover {
+        transform: scale(1.1);
+        color: var(--medium-purple);
+    }
+    
+    .notification-icon2 {
+       font-size: 1.2rem;
+       margin-left: 10px;
+       margin-top: -4px;
+       color: var(--purple);
+       cursor: pointer;
+       transition: transform 0.2s ease;
+    }
+
+     .notification-icon2:hover {
+        transform: scale(1.1);
+        color: var(--medium-purple);
+    }
+</style>
 </head>
 <body>
     <!-- Navbar -->
@@ -365,8 +398,9 @@
                 <span class="me-3">Admin</span>
                 <div class="dropdown">
                     <button class="btn btn-sm" type="button" id="userMenu" data-bs-toggle="dropdown" aria-expanded="false">
-                        <i class="fas fa-user-circle fa-lg"></i>
+                        <i class="fas fa-user-circle notification-icon2"></i>
                     </button>
+                      <i class="fas fa-bell notification-icon"></i>
                       <button 
              onclick="document.body.classList.toggle('dark-mode')" 
             style="
@@ -378,6 +412,7 @@
             margin-left:10px;
             "
             >🌓</button>
+            
                     <ul class="dropdown-menu dropdown-menu-end" aria-labelledby="userMenu">
                         <li><a class="dropdown-item" href="#"><i class="fas fa-user me-2"></i>Profil</a></li>
                         <li><a class="dropdown-item" href="#"><i class="fas fa-cog me-2"></i>Paramètres</a></li>
@@ -399,7 +434,7 @@
     <div class="sidebar">
         <ul class="nav flex-column">
             <li class="nav-item">
-                <a class="nav-link active" href="#">
+                 <a class="nav-link active" href="{% url 'interface' %}">
                     <i class="fas fa-home"></i>
                     <span>Accueil</span>
                 </a>
@@ -447,7 +482,7 @@
     <!-- Main Content -->
     <div class="main-content">
         <div class="dashboard-header">
-            <h1 class="dashboard-title">Indicateurs</h1>
+            <h1 class="dashboard-title">Indicateur : </h1>
             <div>
                 <button class="btn btn-custom btn-edit" onclick="showEditForm()">
                     <i class="fas fa-edit"></i> Modifier
@@ -538,14 +573,14 @@
                         <h3 class="card-title" id="chart1Title">Répartition des étudiants</h3>
                     </div>
                     <div class="chart-container">
-                        <!-- Placeholder pour le graphique camembert -->
-                        <div style="width: 100%; height: 100%; display: flex; align-items: center; justify-content: center; background-color: var(--light-nude); border-radius: 8px; position: relative; overflow: hidden;">
-                            <div style="width: 200px; height: 200px; border-radius: 50%; background: conic-gradient(var(--mauve) 0% 25%, var(--earth-green) 25% 55%, var(--earth-brown) 55% 70%, var(--nude) 70% 100%);"></div>
-                            <div style="position: absolute; width: 80px; height: 80px; border-radius: 50%; background-color: white; display: flex; align-items: center; justify-content: center;">
-                                <span style="font-weight: bold; color: var(--text-dark);">Données</span>
-                            </div>
-                        </div>
-                    </div>
+    <!-- Graphique camembert avec les nouvelles couleurs -->
+              <div style="width: 100%; height: 100%; display: flex; align-items: center; justify-content: center; background-color: #faf7ff; border-radius: 8px; position: relative; overflow: hidden;">
+        <div style="width: 200px; height: 200px; border-radius: 50%; background: conic-gradient(var(--purple) 0% 25%, var(--coral) 25% 55%, var(--deep-purple) 55% 70%, var(--medium-purple) 70% 100%);"></div>
+        <div style="position: absolute; width: 80px; height: 80px; border-radius: 50%; background-color: white; display: flex; align-items: center; justify-content: center;">
+            <span style="font-weight: bold; color: var(--text-dark);">Données</span>
+        </div>
+    </div>
+</div>
                 </div>
             </div>
             
@@ -555,15 +590,15 @@
                         <h3 class="card-title" id="chart2Title">Évolution des inscriptions</h3>
                     </div>
                     <div class="chart-container">
-                        <!-- Placeholder pour le graphique en barres -->
-                        <div style="width: 100%; height: 100%; display: flex; align-items: flex-end; justify-content: space-around; background-color: var(--light-nude); border-radius: 8px; padding: 20px 10px 10px;">
-                            <div style="height: 60%; width: 40px; background-color: var(--mauve); border-radius: 6px 6px 0 0;"></div>
-                            <div style="height: 75%; width: 40px; background-color: var(--mauve); border-radius: 6px 6px 0 0;"></div>
-                            <div style="height: 90%; width: 40px; background-color: var(--mauve); border-radius: 6px 6px 0 0;"></div>
-                            <div style="height: 65%; width: 40px; background-color: var(--mauve); border-radius: 6px 6px 0 0;"></div>
-                            <div style="height: 80%; width: 40px; background-color: var(--mauve); border-radius: 6px 6px 0 0;"></div>
-                        </div>
+    <!-- Graphique en barres avec les nouvelles couleurs -->
+                <div style="width: 100%; height: 100%; display: flex; align-items: flex-end; justify-content: space-around; background-color: #faf7ff; border-radius: 8px; padding: 20px 10px 10px;">
+                <div style="height: 60%; width: 40px; background-color: var(--purple); border-radius: 6px 6px 0 0;"></div>
+                 <div style="height: 75%; width: 40px; background-color: var(--medium-purple); border-radius: 6px 6px 0 0;"></div>
+                   <div style="height: 90%; width: 40px; background-color: var(--deep-purple); border-radius: 6px 6px 0 0;"></div>
+                   <div style="height: 65%; width: 40px; background-color: var(--coral); border-radius: 6px 6px 0 0;"></div>
+                     <div style="height: 80%; width: 40px; background-color: var(--purple); border-radius: 6px 6px 0 0;"></div>
                     </div>
+                  </div>
                 </div>
             </div>
             
@@ -573,36 +608,36 @@
                         <h3 class="card-title" id="chart3Title">Résultats par filière</h3>
                     </div>
                     <div class="chart-container">
-                        <!-- Placeholder pour l'histogramme -->
-                        <div style="width: 100%; height: 100%; display: flex; flex-direction: column; background-color: var(--light-nude); border-radius: 8px; padding: 15px; position: relative;">
-                            <div style="display: flex; height: 85%; align-items: flex-end;">
-                                <div style="flex: 1; margin: 0 5px; display: flex; flex-direction: column; align-items: center;">
-                                    <div style="background-color: var(--earth-brown); width: 100%; border-radius: 6px 6px 0 0; height: 65%;"></div>
-                                    <span style="font-size: 10px; margin-top: 5px;">A</span>
-                                </div>
-                                <div style="flex: 1; margin: 0 5px; display: flex; flex-direction: column; align-items: center;">
-                                    <div style="background-color: var(--earth-brown); width: 100%; border-radius: 6px 6px 0 0; height: 80%;"></div>
-                                    <span style="font-size: 10px; margin-top: 5px;">B</span>
-                                </div>
-                                <div style="flex: 1; margin: 0 5px; display: flex; flex-direction: column; align-items: center;">
-                                    <div style="background-color: var(--earth-brown); width: 100%; border-radius: 6px 6px 0 0; height: 55%;"></div>
-                                    <span style="font-size: 10px; margin-top: 5px;">C</span>
-                                </div>
-                                <div style="flex: 1; margin: 0 5px; display: flex; flex-direction: column; align-items: center;">
-                                    <div style="background-color: var(--earth-brown); width: 100%; border-radius: 6px 6px 0 0; height: 90%;"></div>
-                                    <span style="font-size: 10px; margin-top: 5px;">D</span>
-                                </div>
-                                <div style="flex: 1; margin: 0 5px; display: flex; flex-direction: column; align-items: center;">
-                                    <div style="background-color: var(--earth-brown); width: 100%; border-radius: 6px 6px 0 0; height: 70%;"></div>
-                                    <span style="font-size: 10px; margin-top: 5px;">E</span>
-                                </div>
-                            </div>
-                            <!-- Axe Y -->
-                            <div style="position: absolute; top: 15px; left: 5px; bottom: 25px; width: 1px; background-color: #ccc;"></div>
-                            <!-- Axe X -->
-                            <div style="position: absolute; bottom: 25px; left: 5px; right: 15px; height: 1px; background-color: #ccc;"></div>
-                        </div>
-                    </div>
+                       <!-- Histogramme avec les nouvelles couleurs -->
+                           <div style="width: 100%; height: 100%; display: flex; flex-direction: column; background-color: #faf7ff; border-radius: 8px; padding: 15px; position: relative;">
+                    <div style="display: flex; height: 85%; align-items: flex-end;">
+                       <div style="flex: 1; margin: 0 5px; display: flex; flex-direction: column; align-items: center;">
+                <div style="background-color: var(--coral); width: 100%; border-radius: 6px 6px 0 0; height: 65%;"></div>
+                <span style="font-size: 10px; margin-top: 5px;">A</span>
+                     </div>
+                   <div style="flex: 1; margin: 0 5px; display: flex; flex-direction: column; align-items: center;">
+                <div style="background-color: var(--deep-purple); width: 100%; border-radius: 6px 6px 0 0; height: 80%;"></div>
+                <span style="font-size: 10px; margin-top: 5px;">B</span>
+                      </div>
+                     <div style="flex: 1; margin: 0 5px; display: flex; flex-direction: column; align-items: center;">
+                <div style="background-color: var(--purple); width: 100%; border-radius: 6px 6px 0 0; height: 55%;"></div>
+                <span style="font-size: 10px; margin-top: 5px;">C</span>
+                      </div>
+                     <div style="flex: 1; margin: 0 5px; display: flex; flex-direction: column; align-items: center;">
+                <div style="background-color: var(--medium-purple); width: 100%; border-radius: 6px 6px 0 0; height: 90%;"></div>
+                <span style="font-size: 10px; margin-top: 5px;">D</span>
+                         </div>
+                      <div style="flex: 1; margin: 0 5px; display: flex; flex-direction: column; align-items: center;">
+                <div style="background-color: var(--coral); width: 100%; border-radius: 6px 6px 0 0; height: 70%;"></div>
+                <span style="font-size: 10px; margin-top: 5px;">E</span>
+                     </div>
+                          </div>
+                       <!-- Axe Y -->
+                      <div style="position: absolute; top: 15px; left: 5px; bottom: 25px; width: 1px; background-color: var(--purple); opacity: 0.3;"></div>
+                    <!-- Axe X -->
+                        <div style="position: absolute; bottom: 25px; left: 5px; right: 15px; height: 1px; background-color: var(--purple); opacity: 0.3;"></div>
+                          </div>
+                           </div>
                 </div>
             </div>
             
@@ -772,4 +807,479 @@ document.addEventListener('DOMContentLoaded', function () {
     }
   });
 
+</script>
+
+
+
+
+
+
+
+
+
+
+
+
+
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+    // Récupérer le contexte du canvas
+    const resultsChart = document.getElementById('resultsChart').getContext('2d');
+    
+    // Définir les couleurs de votre thème
+    const purpleColor = '#8a63d2';
+    const deepPurpleColor = '#6741c0';
+    const mediumPurpleColor = '#9c78dd';
+    const coralColor = '#ed6a79';
+    
+    // Créer l'histogramme avec Chart.js
+    new Chart(resultsChart, {
+        type: 'bar',
+        data: {
+            labels: ['A', 'B', 'C', 'D', 'E'],
+            datasets: [{
+                label: 'Résultats par filière',
+                data: [65, 80, 55, 90, 70], // Remplacez par vos données réelles
+                backgroundColor: [
+                    coralColor,
+                    deepPurpleColor,
+                    purpleColor,
+                    mediumPurpleColor,
+                    coralColor
+                ],
+                borderColor: [
+                    coralColor,
+                    deepPurpleColor,
+                    purpleColor,
+                    mediumPurpleColor,
+                    coralColor
+                ],
+                borderWidth: 1,
+                borderRadius: 6,
+                barThickness: 40
+            }]
+        },
+        options: {
+            responsive: true,
+            maintainAspectRatio: false,
+            plugins: {
+                legend: {
+                    display: false
+                }
+            },
+            scales: {
+                y: {
+                    beginAtZero: true,
+                    grid: {
+                        color: `rgba(138, 99, 210, 0.1)`
+                    },
+                    ticks: {
+                        color: '#333333'
+                    }
+                },
+                x: {
+                    grid: {
+                        display: false
+                    },
+                    ticks: {
+                        color: '#333333'
+                    }
+                }
+            }
+        }
+    });
+});
+
+// Mettre à jour la fonction showCharts pour changer les données de l'histogramme
+function showCharts(category) {
+    const chartsSection = document.getElementById('chartsSection');
+    chartsSection.style.display = 'flex';
+    chartsSection.style.flexWrap = 'wrap';
+    
+    // Ajustement des titres en fonction de la catégorie
+    switch(category) {
+        case 'students':
+            document.getElementById('chart1Title').textContent = 'Répartition des étudiants par filière';
+            document.getElementById('chart2Title').textContent = 'Évolution des inscriptions';
+            document.getElementById('chart3Title').textContent = 'Répartition par genre et âge';
+            document.getElementById('chart4Title').textContent = 'Compétences des étudiants';
+            // Mettez à jour les données de l'histogramme si nécessaire
+            updateHistogram([65, 75, 60, 85, 70], ['1A', '2A', '3A', '4A', '5A']);
+            break;
+        case 'teachers':
+            document.getElementById('chart1Title').textContent = 'Répartition des enseignants par département';
+            document.getElementById('chart2Title').textContent = 'Ancienneté des enseignants';
+            document.getElementById('chart3Title').textContent = 'Charge d\'enseignement';
+            document.getElementById('chart4Title').textContent = 'Spécialités des enseignants';
+            // Mettez à jour les données de l'histogramme
+            updateHistogram([40, 60, 75, 55, 80], ['Informatique', 'Santé', 'Mathématiques', 'Langues', 'Management']);
+            break;
+        // Autres cas...
+    }
+    
+    // Faire défiler jusqu'aux graphiques
+    chartsSection.scrollIntoView({ behavior: 'smooth' });
+}
+
+// Fonction pour mettre à jour les données de l'histogramme
+function updateHistogram(data, labels) {
+    const chart = Chart.getChart('resultsChart');
+    if (chart) {
+        chart.data.datasets[0].data = data;
+        chart.data.labels = labels;
+        chart.update();
+    }
+}
+// Implémentation complète pour tous les graphiques
+document.addEventListener('DOMContentLoaded', function() {
+    // Initialiser les graphiques
+    initCharts();
+    
+    // Ajouter des écouteurs d'événements pour le mode sombre
+    document.body.addEventListener('classChange', function() {
+        updateChartsTheme();
+    });
+    
+    // Mode sombre/clair toggle
+    const darkModeToggle = document.querySelector('button[onclick="document.body.classList.toggle(\'dark-mode\')"]');
+    if (darkModeToggle) {
+        darkModeToggle.addEventListener('click', function() {
+            // Permettre aux graphiques de se mettre à jour après le changement de classe
+            setTimeout(updateChartsTheme, 100);
+        });
+    }
+});
+
+// Initialiser tous les graphiques
+function initCharts() {
+    // Définir les couleurs du thème
+    const colors = getThemeColors();
+    
+    // 1. Graphique en camembert - Répartition
+    const pieCtx = document.getElementById('pieChart').getContext('2d');
+    window.pieChart = new Chart(pieCtx, {
+        type: 'pie',
+        data: {
+            labels: ['1ère année', '2ème année', '3ème année', 'Masters'],
+            datasets: [{
+                data: [25, 30, 15, 30],
+                backgroundColor: [colors.purple, colors.coral, colors.deepPurple, colors.mediumPurple],
+                borderColor: colors.isDark ? '#2b2b2b' : 'white',
+                borderWidth: 2
+            }]
+        },
+        options: {
+            responsive: true,
+            maintainAspectRatio: false,
+            plugins: {
+                legend: {
+                    position: 'bottom',
+                    labels: {
+                        color: colors.textColor
+                    }
+                }
+            }
+        }
+    });
+    
+    // 2. Graphique en barres - Évolution
+    const barCtx = document.getElementById('barChart').getContext('2d');
+    window.barChart = new Chart(barCtx, {
+        type: 'bar',
+        data: {
+            labels: ['2021', '2022', '2023', '2024', '2025'],
+            datasets: [{
+                label: 'Nombre d\'inscriptions',
+                data: [1100, 1150, 1200, 1230, 1250],
+                backgroundColor: [
+                    colors.purple,
+                    colors.mediumPurple,
+                    colors.deepPurple,
+                    colors.coral,
+                    colors.purple
+                ],
+                borderColor: colors.isDark ? '#2b2b2b' : 'white',
+                borderWidth: 1,
+                borderRadius: 6,
+                barThickness: 40
+            }]
+        },
+        options: {
+            responsive: true,
+            maintainAspectRatio: false,
+            plugins: {
+                legend: {
+                    display: false
+                }
+            },
+            scales: {
+                y: {
+                    beginAtZero: true,
+                    grid: {
+                        color: `rgba(138, 99, 210, 0.1)`
+                    },
+                    ticks: {
+                        color: colors.textColor
+                    }
+                },
+                x: {
+                    grid: {
+                        display: false
+                    },
+                    ticks: {
+                        color: colors.textColor
+                    }
+                }
+            }
+        }
+    });
+    
+    // 3. Histogramme - Résultats par filière
+    const histoCtx = document.getElementById('histoChart').getContext('2d');
+    window.histoChart = new Chart(histoCtx, {
+        type: 'bar',
+        data: {
+            labels: ['Informatique', 'Santé', 'Sciences', 'Gestion', 'Langues'],
+            datasets: [{
+                label: 'Résultats par filière',
+                data: [65, 80, 55, 90, 70],
+                backgroundColor: [
+                    colors.coral,
+                    colors.deepPurple,
+                    colors.purple,
+                    colors.mediumPurple,
+                    colors.coral
+                ],
+                borderColor: colors.isDark ? '#2b2b2b' : 'white',
+                borderWidth: 1,
+                borderRadius: 6,
+                barThickness: 40
+            }]
+        },
+        options: {
+            responsive: true,
+            maintainAspectRatio: false,
+            plugins: {
+                legend: {
+                    display: false
+                }
+            },
+            scales: {
+                y: {
+                    beginAtZero: true,
+                    grid: {
+                        color: `rgba(138, 99, 210, 0.1)`
+                    },
+                    ticks: {
+                        color: colors.textColor
+                    }
+                },
+                x: {
+                    grid: {
+                        display: false
+                    },
+                    ticks: {
+                        color: colors.textColor
+                    }
+                }
+            }
+        }
+    });
+    
+    // 4. Graphique radar - Compétences
+    const radarCtx = document.getElementById('radarChart').getContext('2d');
+    window.radarChart = new Chart(radarCtx, {
+        type: 'radar',
+        data: {
+            labels: ['Programmation', 'Base de données', 'Algorithmique', 'Réseaux', 'Gestion de projet'],
+            datasets: [{
+                label: 'Compétences actuelles',
+                data: [80, 75, 65, 90, 70],
+                backgroundColor: `rgba(138, 99, 210, 0.3)`,
+                borderColor: colors.purple,
+                borderWidth: 2,
+                pointBackgroundColor: colors.deepPurple,
+                pointBorderColor: colors.isDark ? '#2b2b2b' : 'white',
+                pointHoverBackgroundColor: colors.coral,
+                pointHoverBorderColor: colors.isDark ? '#2b2b2b' : 'white'
+            }]
+        },
+        options: {
+            responsive: true,
+            maintainAspectRatio: false,
+            scales: {
+                r: {
+                    angleLines: {
+                        color: `rgba(138, 99, 210, 0.2)`
+                    },
+                    grid: {
+                        color: `rgba(138, 99, 210, 0.2)`
+                    },
+                    pointLabels: {
+                        color: colors.textColor
+                    },
+                    ticks: {
+                        color: colors.textColor,
+                        backdropColor: colors.isDark ? '#2b2b2b' : 'white'
+                    }
+                }
+            },
+            plugins: {
+                legend: {
+                    labels: {
+                        color: colors.textColor
+                    }
+                }
+            }
+        }
+    });
+}
+
+// Obtenir les couleurs du thème en fonction du mode (clair/sombre)
+function getThemeColors() {
+    const isDark = document.body.classList.contains('dark-mode');
+    return {
+        isDark: isDark,
+        purple: isDark ? '#a485e0' : '#8a63d2',
+        coral: isDark ? '#ff7b8a' : '#ed6a79',
+        deepPurple: isDark ? '#8a63d2' : '#6741c0',
+        mediumPurple: isDark ? '#b89ee6' : '#9c78dd',
+        textColor: isDark ? '#e0e0e0' : '#333333',
+        backgroundColor: isDark ? '#2b2b2b' : 'white'
+    };
+}
+
+// Mettre à jour le thème des graphiques (mode clair/sombre)
+function updateChartsTheme() {
+    const colors = getThemeColors();
+    
+    // Mettre à jour chaque graphique avec les nouvelles couleurs
+    if (window.pieChart) {
+        window.pieChart.data.datasets[0].borderColor = colors.isDark ? '#2b2b2b' : 'white';
+        window.pieChart.options.plugins.legend.labels.color = colors.textColor;
+        window.pieChart.update();
+    }
+    
+    if (window.barChart) {
+        window.barChart.data.datasets[0].borderColor = colors.isDark ? '#2b2b2b' : 'white';
+        window.barChart.options.scales.y.ticks.color = colors.textColor;
+        window.barChart.options.scales.x.ticks.color = colors.textColor;
+        window.barChart.update();
+    }
+    
+    if (window.histoChart) {
+        window.histoChart.data.datasets[0].borderColor = colors.isDark ? '#2b2b2b' : 'white';
+        window.histoChart.options.scales.y.ticks.color = colors.textColor;
+        window.histoChart.options.scales.x.ticks.color = colors.textColor;
+        window.histoChart.update();
+    }
+    
+    if (window.radarChart) {
+        window.radarChart.data.datasets[0].pointBorderColor = colors.isDark ? '#2b2b2b' : 'white';
+        window.radarChart.data.datasets[0].pointHoverBorderColor = colors.isDark ? '#2b2b2b' : 'white';
+        window.radarChart.options.scales.r.pointLabels.color = colors.textColor;
+        window.radarChart.options.scales.r.ticks.color = colors.textColor;
+        window.radarChart.options.scales.r.ticks.backdropColor = colors.isDark ? '#2b2b2b' : 'white';
+        window.radarChart.options.plugins.legend.labels.color = colors.textColor;
+        window.radarChart.update();
+    }
+}
+
+// Mettre à jour les graphiques en fonction de la catégorie sélectionnée
+function showCharts(category) {
+    const chartsSection = document.getElementById('chartsSection');
+    chartsSection.style.display = 'flex';
+    chartsSection.style.flexWrap = 'wrap';
+    
+    // Ajustement des titres et données en fonction de la catégorie
+    switch(category) {
+        case 'students':
+            document.getElementById('chart1Title').textContent = 'Répartition des étudiants par filière';
+            document.getElementById('chart2Title').textContent = 'Évolution des inscriptions';
+            document.getElementById('chart3Title').textContent = 'Répartition par genre et âge';
+            document.getElementById('chart4Title').textContent = 'Compétences des étudiants';
+            
+            // Mettre à jour les données
+            updatePieChart(['1ère année', '2ème année', '3ème année', 'Masters'], [25, 30, 15, 30]);
+            updateBarChart(['2021', '2022', '2023', '2024', '2025'], [1100, 1150, 1200, 1230, 1250]);
+            updateHistogram(['Hommes<25', 'Hommes≥25', 'Femmes<25', 'Femmes≥25', 'Autres'], [30, 20, 35, 10, 5]);
+            updateRadarChart(['Programmation', 'Base de données', 'Algorithmique', 'Réseaux', 'Gestion de projet'], [80, 75, 65, 90, 70]);
+            break;
+            
+        case 'teachers':
+            document.getElementById('chart1Title').textContent = 'Répartition des enseignants par département';
+            document.getElementById('chart2Title').textContent = 'Ancienneté des enseignants';
+            document.getElementById('chart3Title').textContent = 'Charge d\'enseignement';
+            document.getElementById('chart4Title').textContent = 'Spécialités des enseignants';
+            
+            // Mettre à jour les données
+            updatePieChart(['Informatique', 'Santé', 'Management', 'Langues'], [40, 25, 20, 15]);
+            updateBarChart(['<5 ans', '5-10 ans', '10-15 ans', '15-20 ans', '>20 ans'], [15, 25, 20, 15, 12]);
+            updateHistogram(['<150h', '150-250h', '250-350h', '350-450h', '>450h'], [10, 25, 35, 15, 2]);
+            updateRadarChart(['Recherche', 'Enseignement', 'Admin', 'Projets', 'International'], [70, 85, 55, 60, 45]);
+            break;
+            
+        case 'success':
+            document.getElementById('chart1Title').textContent = 'Taux de réussite par filière';
+            document.getElementById('chart2Title').textContent = 'Évolution du taux de réussite';
+            document.getElementById('chart3Title').textContent = 'Répartition des mentions';
+            document.getElementById('chart4Title').textContent = 'Facteurs de réussite';
+            
+            // Mettre à jour les données
+            updatePieChart(['Informatique', 'Santé', 'Management', 'Générale'], [95, 90, 88, 92]);
+            updateBarChart(['2021', '2022', '2023', '2024', '2025'], [88, 89, 90, 91, 92]);
+            updateHistogram(['Passable', 'AB', 'Bien', 'TB', 'Excellence'], [15, 30, 35, 15, 5]);
+            updateRadarChart(['Assiduité', 'Travail perso', 'Tutorat', 'Projets', 'Stages'], [85, 90, 70, 75, 95]);
+            break;
+            
+        case 'courses':
+            document.getElementById('chart1Title').textContent = 'Répartition des cours par niveau';
+            document.getElementById('chart2Title').textContent = 'Heures d\'enseignement par mois';
+            document.getElementById('chart3Title').textContent = 'Types de cours proposés';
+            document.getElementById('chart4Title').textContent = 'Évaluation des cours';
+            
+            // Mettre à jour les données
+            updatePieChart(['L1', 'L2', 'L3', 'M1', 'M2'], [20, 20, 20, 20, 20]);
+            updateBarChart(['Sept', 'Oct', 'Nov', 'Déc', 'Jan'], [350, 450, 400, 300, 380]);
+            updateHistogram(['CM', 'TD', 'TP', 'Projets', 'Stage'], [30, 25, 25, 15, 5]);
+            updateRadarChart(['Contenu', 'Pédagogie', 'Support', 'Évaluation', 'Pertinence'], [85, 90, 75, 80, 95]);
+            break;
+    }
+    
+    // Faire défiler jusqu'aux graphiques
+    chartsSection.scrollIntoView({ behavior: 'smooth' });
+}
+
+// Fonctions de mise à jour des graphiques
+function updatePieChart(labels, data) {
+    if (window.pieChart) {
+        window.pieChart.data.labels = labels;
+        window.pieChart.data.datasets[0].data = data;
+        window.pieChart.update();
+    }
+}
+
+function updateBarChart(labels, data) {
+    if (window.barChart) {
+        window.barChart.data.labels = labels;
+        window.barChart.data.datasets[0].data = data;
+        window.barChart.update();
+    }
+}
+
+function updateHistogram(labels, data) {
+    if (window.histoChart) {
+        window.histoChart.data.labels = labels;
+        window.histoChart.data.datasets[0].data = data;
+        window.histoChart.update();
+    }
+}
+
+function updateRadarChart(labels, data) {
+    if (window.radarChart) {
+        window.radarChart.data.labels = labels;
+        window.radarChart.data.datasets[0].data = data;
+        window.radarChart.update();
+    }
+}
 </script>
