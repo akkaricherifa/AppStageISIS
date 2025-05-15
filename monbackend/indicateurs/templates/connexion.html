@@ -1,0 +1,578 @@
+<!DOCTYPE html>
+{% load static %}
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>ISIS - Connexion</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+
+    <style>
+        :root {
+            --primary-gradient: linear-gradient(135deg, #ff6b6b 0%, #a56af8 100%);
+            --secondary-color: #6c5ce7;
+            --light-purple: #a56af8;
+            --text-color: #333;
+            --light-bg: #f9f7ff;
+            --white: #ffffff;
+            --shadow: 0 10px 30px rgba(165, 106, 248, 0.2);
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+
+        body {
+            background-color: var(--light-bg);
+            height: 100vh;
+            display: flex;
+            flex-direction: column;
+            overflow: hidden;
+        }
+
+        .navbar {
+            background-color: var(--white);
+            padding: 10px 40px;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+            display: flex;
+            align-items: center;
+            height: 70px;
+            z-index: 100;
+        }
+
+        .logo {
+            height: 50px;
+        }
+
+        .container {
+            flex: 1;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 0 20px;
+        }
+
+        .login-card {
+            width: 100%;
+            max-width: 400px;
+            height: 520px;
+            background: var(--white);
+            border-radius: 20px;
+            overflow: hidden;
+            box-shadow: var(--shadow);
+            position: relative;
+            display: flex;
+            flex-direction: column;
+        }
+
+        .card-header {
+            background: var(--primary-gradient);
+            padding: 20px;
+            text-align: center;
+            color: var(--white);
+        }
+
+        .card-header h2 {
+            font-weight: 600;
+            font-size: 24px;
+            margin-bottom: 5px;
+            opacity: 0;
+            animation: fadeInUp 0.6s forwards;
+        }
+
+        .card-header p {
+            font-size: 14px;
+            opacity: 0;
+            animation: fadeInUp 0.6s 0.2s forwards;
+        }
+
+        .card-body {
+            padding: 25px 25px 15px;
+            overflow-y: auto;
+            flex: 1;
+        }
+
+        .form-group {
+            margin-bottom: 15px;
+            position: relative;
+            opacity: 0;
+            transform: translateY(20px);
+            animation: fadeInUp 0.5s forwards;
+        }
+
+        .form-group:nth-child(1) {
+            animation-delay: 0.3s;
+        }
+
+        .form-group:nth-child(2) {
+            animation-delay: 0.4s;
+        }
+
+        .form-group label {
+            display: block;
+            color: var(--text-color);
+            margin-bottom: 6px;
+            font-weight: 500;
+            font-size: 14px;
+        }
+
+        .form-control {
+            width: 100%;
+            padding: 12px 15px;
+            border: 2px solid #e1e1e1;
+            border-radius: 10px;
+            font-size: 14px;
+            transition: all 0.3s ease;
+        }
+
+        .form-control:focus {
+            outline: none;
+            border-color: var(--light-purple);
+            box-shadow: 0 0 0 3px rgba(165, 106, 248, 0.2);
+        }
+
+        .password-toggle {
+            position: absolute;
+            right: 15px;
+            top: 38px;
+            color: #999;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .password-toggle:hover {
+            color: var(--secondary-color);
+            transform: scale(1.1);
+        }
+
+        .form-check {
+            display: flex;
+            align-items: center;
+            margin-bottom: 15px;
+            opacity: 0;
+            animation: fadeInUp 0.5s 0.5s forwards;
+        }
+
+        .form-check-input {
+            margin-right: 10px;
+            width: 16px;
+            height: 16px;
+            accent-color: var(--light-purple);
+            cursor: pointer;
+        }
+
+        .form-check-label {
+            color: var(--text-color);
+            font-size: 14px;
+        }
+
+        .forgot-password {
+            text-align: right;
+            margin-bottom: 20px;
+            opacity: 0;
+            animation: fadeInUp 0.5s 0.6s forwards;
+        }
+
+        .forgot-password a {
+            color: var(--secondary-color);
+            text-decoration: none;
+            font-size: 14px;
+            transition: all 0.3s ease;
+        }
+
+        .forgot-password a:hover {
+            color: var(--light-purple);
+            text-decoration: underline;
+        }
+
+        .btn-login {
+            width: 100%;
+            padding: 12px;
+            border: none;
+            border-radius: 10px;
+            background: var(--primary-gradient);
+            color: var(--white);
+            font-size: 16px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            opacity: 0;
+            animation: fadeInUp 0.5s 0.7s forwards;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .btn-login:before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: -100%;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.3), transparent);
+            transition: 0.5s;
+        }
+
+        .btn-login:hover:before {
+            left: 100%;
+        }
+
+        .btn-login:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 10px 20px rgba(108, 92, 231, 0.3);
+        }
+
+        .card-footer {
+            padding: 15px;
+            text-align: center;
+            border-top: 1px solid #eee;
+            opacity: 0;
+            animation: fadeInUp 0.5s 0.8s forwards;
+        }
+
+        .card-footer p {
+            color: #777;
+            font-size: 14px;
+        }
+
+        .card-footer a {
+            color: var(--secondary-color);
+            text-decoration: none;
+            font-weight: 500;
+            transition: all 0.3s ease;
+        }
+
+        .card-footer a:hover {
+            color: var(--light-purple);
+            text-decoration: underline;
+        }
+
+        /* Animated background elements */
+        .bg-shapes {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            z-index: -1;
+            overflow: hidden;
+        }
+
+        .shape {
+            position: absolute;
+            border-radius: 50%;
+            filter: blur(30px);
+        }
+
+        .shape-1 {
+            top: 20%;
+            left: 10%;
+            width: 300px;
+            height: 300px;
+            background: linear-gradient(135deg, rgba(255, 107, 107, 0.4) 0%, rgba(165, 106, 248, 0.2) 100%);
+            animation: float1 15s infinite linear;
+        }
+
+        .shape-2 {
+            bottom: 10%;
+            right: 15%;
+            width: 400px;
+            height: 400px;
+            background: linear-gradient(135deg, rgba(165, 106, 248, 0.3) 0%, rgba(255, 107, 107, 0.2) 100%);
+            animation: float2 20s infinite linear;
+        }
+
+        .shape-3 {
+            top: 60%;
+            left: 60%;
+            width: 200px;
+            height: 200px;
+            background: linear-gradient(135deg, rgba(108, 92, 231, 0.3) 0%, rgba(255, 107, 107, 0.2) 100%);
+            animation: float3 12s infinite linear;
+        }
+
+        @keyframes float1 {
+            0% {
+                transform: translate(0, 0) rotate(0deg);
+            }
+            50% {
+                transform: translate(-100px, 50px) rotate(180deg);
+            }
+            100% {
+                transform: translate(0, 0) rotate(360deg);
+            }
+        }
+
+        @keyframes float2 {
+            0% {
+                transform: translate(0, 0) rotate(0deg);
+            }
+            50% {
+                transform: translate(100px, -70px) rotate(-180deg);
+            }
+            100% {
+                transform: translate(0, 0) rotate(-360deg);
+            }
+        }
+
+        @keyframes float3 {
+            0% {
+                transform: translate(0, 0) scale(1);
+            }
+            50% {
+                transform: translate(-50px, 30px) scale(1.1);
+            }
+            100% {
+                transform: translate(0, 0) scale(1);
+            }
+        }
+
+        @keyframes fadeInUp {
+            from {
+                opacity: 0;
+                transform: translateY(20px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        /* Logo animation */
+        .logo-container {
+            display: flex;
+            align-items: center;
+            animation: fadeIn 1s forwards;
+            width:70px;
+
+        }
+
+        .logo-text {
+            margin-left: 160px;
+            font-weight: 600;
+            font-size: 18px;
+            background: var(--primary-gradient);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            white-space: nowrap;
+        }
+
+        /* Input focus animation */
+        .form-control:focus + .input-animation {
+            width: 100%;
+        }
+
+        .input-animation {
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            height: 2px;
+            width: 0;
+            background: var(--primary-gradient);
+            transition: width 0.3s ease;
+        }
+
+        /* Pulse animation for the button */
+        @keyframes pulse {
+            0% {
+                box-shadow: 0 0 0 0 rgba(165, 106, 248, 0.4);
+            }
+            70% {
+                box-shadow: 0 0 0 10px rgba(165, 106, 248, 0);
+            }
+            100% {
+                box-shadow: 0 0 0 0 rgba(165, 106, 248, 0);
+            }
+        }
+
+        .btn-login:active {
+            animation: pulse 1s;
+            transform: scale(0.98);
+        }
+
+        @keyframes fadeIn {
+            from {
+                opacity: 0;
+            }
+            to {
+                opacity: 1;
+            }
+        }
+
+        /* Responsive design */
+        @media screen and (max-width: 480px) {
+            .navbar {
+                padding: 10px 20px;
+            }
+            
+            .logo-text {
+                font-size: 14px;
+            }
+            
+            .login-card {
+                max-width: 90%;
+                height: 480px;
+            }
+            
+            .card-header {
+                padding: 15px;
+            }
+            
+            .card-body {
+                padding: 20px 15px 10px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- Animated background shapes -->
+    <div class="bg-shapes">
+        <div class="shape shape-1"></div>
+        <div class="shape shape-2"></div>
+        <div class="shape shape-3"></div>
+    </div>
+
+    <!-- Navbar -->
+    <nav class="navbar">
+        <div class="logo-container">
+            <!-- Remplacez le chemin d'accès par celui de votre logo -->
+            <img src="{% static 'images/isis.png' %}" alt="Logo ISIS" class="logo" style="height: 90px; width: auto;">
+            <div class="logo-text">ISIS - École d'ingénieurs ISIS - Informatique et Systèmes d'Information pour la
+      Santé</div>
+        </div>
+    </nav>
+
+    <!-- Main Content -->
+    <div class="container">
+        <div class="login-card">
+            <div class="card-header">
+                <h2>Connexion</h2>
+                <p>Entrez vos identifiants pour accéder à votre espace</p>
+            </div>
+            
+            <div class="card-body">
+                 {% if messages %}
+    <div>
+        {% for message in messages %}
+            <p style="color: coral; font-weight: bold;">{{ message }}</p>
+        {% endfor %}
+    </div>
+{% endif %}
+                <form method="post" action="{% url 'connexion' %}" autocomplete="off">
+                    <!-- Django CSRF Token -->
+                    {% csrf_token %}
+            
+                    <div class="form-group">
+                        <label for="email">Username</label>
+                        <input type="text" class="form-control" id="username" name="username" placeholder="votre username" required autocomplete="off">
+                        <div class="input-animation"></div>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label for="password">Mot de passe</label>
+                        <input type="password" class="form-control" id="password" name="password" placeholder="••••••••" required autocomplete="new-password">
+                        <span class="password-toggle" onclick="togglePassword()">
+                            <i class="fas fa-eye" id="toggleIcon"></i>
+                        </span>
+                        <div class="input-animation"></div>
+                    </div>
+                    
+                    <div class="form-check">
+                        <input type="checkbox" class="form-check-input" id="remember" name="remember">
+                        <label class="form-check-label" for="remember">Se souvenir de moi</label>
+                    </div>
+                    
+                    <div class="forgot-password">
+                        <a href="#">Mot de passe oublié?</a>
+                    </div>
+                    
+                    <button type="submit" class="btn-login" id="loginBtn">
+                        Se connecter
+                    </button>
+                </form>
+            </div>
+            
+            <div class="card-footer">
+                <p>Vous n'avez pas de compte? <a href="#">Créer un compte</a></p>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        function togglePassword() {
+            const passwordInput = document.getElementById('password');
+            const toggleIcon = document.getElementById('toggleIcon');
+            
+            if (passwordInput.type === 'password') {
+                passwordInput.type = 'text';
+                toggleIcon.classList.remove('fa-eye');
+                toggleIcon.classList.add('fa-eye-slash');
+            } else {
+                passwordInput.type = 'password';
+                toggleIcon.classList.remove('fa-eye-slash');
+                toggleIcon.classList.add('fa-eye');
+            }
+        }
+
+        // Add ripple effect to login button
+        document.getElementById('loginBtn').addEventListener('click', function(e) {
+            const button = this;
+            const ripple = document.createElement('span');
+            const rect = button.getBoundingClientRect();
+            const x = e.clientX - rect.left;
+            const y = e.clientY - rect.top;
+            
+            ripple.style.cssText = `
+                position: absolute;
+                background: rgba(255, 255, 255, 0.3);
+                border-radius: 50%;
+                transform: translate(-50%, -50%);
+                pointer-events: none;
+                animation: rippleEffect 0.8s linear;
+                left: ${x}px;
+                top: ${y}px;
+            `;
+            
+            button.appendChild(ripple);
+            
+            setTimeout(() => {
+                ripple.remove();
+            }, 800);
+        });
+
+        // Add ripple animation
+        const style = document.createElement('style');
+        style.textContent = `
+            @keyframes rippleEffect {
+                0% {
+                    width: 0;
+                    height: 0;
+                    opacity: 0.8;
+                }
+                100% {
+                    width: 500px;
+                    height: 500px;
+                    opacity: 0;
+                }
+            }
+        `;
+        document.head.appendChild(style);
+
+        // Add focus animations
+        const inputs = document.querySelectorAll('.form-control');
+        inputs.forEach(input => {
+            input.addEventListener('focus', () => {
+                input.parentElement.classList.add('focused');
+            });
+            input.addEventListener('blur', () => {
+                input.parentElement.classList.remove('focused');
+            });
+        });
+
+
+    </script>
+</body>
+</html>

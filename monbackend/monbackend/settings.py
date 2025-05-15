@@ -12,7 +12,7 @@ https://docs.djangoproject.com/en/5.2/ref/settings/
 
 from pathlib import Path
 import os
-
+from django.contrib.messages import constants as messages
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
 
@@ -44,6 +44,8 @@ INSTALLED_APPS = [
     "crispy_forms",
     "crispy_bootstrap5",
 ]
+LOGIN_REDIRECT_URL = '/interface/'
+
 
 CRISPY_ALLOWED_TEMPLATE_PACKS = "bootstrap5"
 
@@ -57,6 +59,8 @@ MIDDLEWARE = [
     'django.contrib.auth.middleware.AuthenticationMiddleware',
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
+    'django.contrib.messages.middleware.MessageMiddleware',
+
 ]
 
 ROOT_URLCONF = 'monbackend.urls'
@@ -107,7 +111,10 @@ AUTH_PASSWORD_VALIDATORS = [
         'NAME': 'django.contrib.auth.password_validation.NumericPasswordValidator',
     },
 ]
-
+AUTHENTICATION_BACKENDS = ['django.contrib.auth.backends.ModelBackend']
+MESSAGE_TAGS = {
+    messages.ERROR: 'danger',  # pour Bootstrap éventuellement
+}
 
 # Internationalization
 # https://docs.djangoproject.com/en/5.2/topics/i18n/
